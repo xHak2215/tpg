@@ -124,7 +124,7 @@ def cursor(x:int,y:int,text:str)->str:
         print(f"\033[{x}D{text}")# на зад
         
 def clear():
-    print("\033[2J") #очистка 
+    print("\033[2J"+'\033[0') #очистка 
     os.system("clear")
 
         
