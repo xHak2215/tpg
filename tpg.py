@@ -2,9 +2,13 @@ import keyboard
 import os
 import time
 
-def listgr(unitperedvogenielist:list,kastcor='>')->str:
+def listgr(unitperedvogenielist:list,kastcor='>',title='')->str:
+    cursor=0
     while True:
         cor=''
+        print(title)
+        if keyboard.is_pressed('esc'):
+            return 'exit'
         if keyboard.is_pressed('down'):
             cursor=cursor+1
         if keyboard.is_pressed('up'):
@@ -90,7 +94,7 @@ def clear():
     print("\033[2J") #очистка 
     os.system("clear")
     
-def yes_ro_no(text:str,kastcor='>'):
+def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no'):
     out=False
     yes=''
     no='>'
@@ -110,8 +114,9 @@ def yes_ro_no(text:str,kastcor='>'):
                 pass
             return out
         print(' '*(10-len(text))+text)
-        print(f'{' '*15}{yes}yes {no}no')
+        print(f'{' '*15}{yes}{yestxt} {no}{notxt}')
         os.system('clear')
+        
         
 def cursor(x:int,y:int,text:str)->str:
     if y >0:
