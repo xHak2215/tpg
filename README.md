@@ -1,4 +1,4 @@
-TPG - terminal python graphics
+TPG - terminal python graphics (UI)
 небольшая библиотека для создания графических интерфейсов 
 в функционал библиотеки входят :
 - списки
