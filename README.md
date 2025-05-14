@@ -13,3 +13,6 @@ from tpg import *
 out_point=listgr(['point1','point2','point3'])
 print(out_point)
 ```
+
+как это выгледит
+![hippo](doc/list_test.gif)
