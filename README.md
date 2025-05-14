@@ -6,3 +6,10 @@ TPG - terminal python graphics (UI)<br>
 - упровление курсором кансоли
 - меню выбора (да/нет)
 - настройки с потдержкой json
+примеры и базовый функционал
+
+```python
+from tpg import *
+out_point=listgr(['point1','point2','point3'])
+print(out_point)
+```
