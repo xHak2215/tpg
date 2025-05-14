@@ -1,32 +1,100 @@
-import keyboard
+import json
 import os
 import time
 
-def listgr(unitperedvogenielist:list,kastcor='>',title='')->str:
+import keyboard
+
+def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart')->str:
     cursor=0
     while True:
         cor=''
         print(title)
         if keyboard.is_pressed('esc'):
-            return 'exit'
+            return None
         if keyboard.is_pressed('down'):
             cursor=cursor+1
         if keyboard.is_pressed('up'):
             cursor=cursor-1
         if cursor<0:
             cursor=0
-        for i in range(0,len(unitperedvogenielist)):
-            if cursor==i:
-                cor=kastcor
+        if cursor>len(unitperedvogenielist)-1:
+            cursor=len(unitperedvogenielist)-1
+        for i in range(len(unitperedvogenielist)):
+            if style =='standart':
+                if cursor==i:
+                    cor=kastcor
+                else:
+                    cor=' '
+                print(cor+str(unitperedvogenielist[i]))
+            elif style=='scob':
+                if cursor==i:
+                    cor='+'
+                else:
+                    cor=''
+                print('['+cor+']'+str(unitperedvogenielist[i]))
             else:
-                cor=''
-            print(cor+unitperedvogenielist[i])
+                raise SyntaxError('no style'+style)
+            #if type(unitperedvogenielist[i])=="dict":
+            #    for a in unitperedvogenielist[i].keys():
+            #        print('  '+cor+a+'ᐁ')
+            #        for s in a:
+            #            print(s)
+            
         if keyboard.is_pressed('enter'):
             unitperedvogenie=unitperedvogenielist[cursor]
             while keyboard.is_pressed('enter'):
                 time.sleep(0.1)
-                pass
             return unitperedvogenie
+        os.system('clear') 
+        
+def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None)->str:
+    cursor=0
+    if os.path.isfile(jsonf):
+            with open(jsonf, "r") as json_settings:
+                data = json.load(json_settings)
+    else:
+        raise FileNotFoundError(f'no faile ({jsonf})')
+    while True:
+        cor=''
+        print(title)
+        if keyboard.is_pressed('esc'):
+            with open(jsonf, "w") as json_settings:
+                json_settings.write(json.dumps(data))
+            while keyboard.is_pressed('esc'):
+                time.sleep(0.1)
+            return data
+        if keyboard.is_pressed('down'):
+            cursor=cursor+1
+        if keyboard.is_pressed('up'):
+            cursor=cursor-1
+        if cursor<0:
+            cursor=0
+        if cursor>len(list(data.keys()))-1:
+            cursor=len(list(data.keys()))-1
+        for i in range(len(list(data.keys()))):
+            punkt=list(data.keys())[i]
+            if cursor==i:
+                cor=kastcor
+            else:
+                cor=' '
+            if style == 'zapoln':
+                if bool(data[punkt]):
+                    flag='█'
+                else:
+                    flag='░'
+            elif style == '+':
+                if bool(data[punkt]):
+                    flag='+'
+                else:       
+                    flag='-'
+            print(cor+punkt+ ' ' * int(20 - len(punkt)) +'['+flag+']')
+        if keyboard.is_pressed('enter'):
+            if data[list(data.keys())[cursor]]:
+                data[list(data.keys())[cursor]]=False
+            else:
+                data[list(data.keys())[cursor]]=True
+            while keyboard.is_pressed('enter'):
+                time.sleep(0.1)
         os.system('clear') 
         
 class ansi:
@@ -62,7 +130,7 @@ class ansi:
             'clear':0
             
         }
-def color(stule,color,begraund)->str:#stule,color,beggraubd
+def color(color,stule='standart',begraund='blak')->str:#color,stule,beggraubd
     #if len(ansis)>3:
     #    
     self=ansi()
@@ -90,9 +158,6 @@ def cursor(x:int,y:int,text:str)->str:
     else:
         print(f"\033[{x}D{text}")# на зад
         
-def clear():
-    print("\033[2J") #очистка 
-    os.system("clear")
     
 def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no'):
     out=False
@@ -129,7 +194,12 @@ def cursor(x:int,y:int,text:str)->str:
         print(f"\033[{x}D{text}")# на зад
         
 def clear():
-    print("\033[2J"+'\033[0') #очистка 
+    print("\033[2J"+'\033[0',end='') #очистка 
     os.system("clear")
+
+    
+    
+    
+
 
         
