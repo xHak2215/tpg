@@ -3,7 +3,7 @@ requires = ["poetry-core>=2.1.1"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "gpr"
+name = "tpg"
 version = "1.0.0"
 description = "легкая библиотека для работы с псевдо графикой в терминале"
 authors = ["hit<@HITHELL.com>"]
