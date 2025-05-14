@@ -7,8 +7,8 @@ def readme():
 
 
 setup(
-  name='gpr',
-  version='0.0.1',
+  name='tpg',
+  version='1.0.0',
   author='@HITHELL',
   author_email='hit<@HITHELL.com>',
   description="легкая библиотека для работы с псевдо графикой в терминале",
