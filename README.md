@@ -24,6 +24,7 @@ style - стиль по умолчанию 'standart' другие 'scob'<br>
 ![hippo](doc/list_test.gif)
 
 <h3>settings:</h3>
+
 ```python 
 from tpg import * #inport lib
 
