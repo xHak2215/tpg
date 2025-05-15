@@ -21,7 +21,7 @@ print(out_point)
 from tpg import * #inport lib
 
 out=settings({'point1':true,'point2':false}) # change dict
-p
+print(out) # print new dict from json file
 
 out=settings({},jsonf='test_json.json')# read and write json file 
 
