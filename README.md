@@ -9,6 +9,7 @@ TPG - terminal python graphics (UI)<br>
 примеры и базовый функционал
 
 <h3>listgr:</h3>
+
 ```python
 from tpg import *
 out_point=listgr(['point1','point2','point3'])
