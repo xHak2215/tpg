@@ -8,7 +8,7 @@ TPG - terminal python graphics (UI)<br>
 - настройки с потдержкой json
 примеры и базовый функционал
 
-listgr:<br>
+<h3>listgr:</h3>
 ```python
 from tpg import *
 out_point=listgr(['point1','point2','point3'])
