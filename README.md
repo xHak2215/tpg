@@ -14,6 +14,10 @@ out_point=listgr(['point1','point2','point3'])
 print(out_point)
 ```
 
+аргументы:<br>
+kastor - парамитер отвечающий за курсор стоящий перед выброным пунктом (по умолчанию '>')
+title - текст над списком 
+style - стиль по умолчанию 'standart' 
 как это выгледит
 ![hippo](doc/list_test.gif)
 
