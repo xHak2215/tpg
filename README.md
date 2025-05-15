@@ -23,7 +23,7 @@ style - стиль по умолчанию 'standart' другие 'scob'<br>
 как это выгледит
 ![hippo](doc/list_test.gif)
 
-settings:<br>
+<h3>settings:</h3>
 ```python 
 from tpg import * #inport lib
 
@@ -40,7 +40,7 @@ print(out) # print new dict
 значения должно быть true или false функция вернет обновлённый словарь измененый пользователем<br><br>
 во 2 случае словарь извлекается из json файла его име указывается в аргументе `jsonf` после пользовательских изменений json файл будет изменен а функция вернёт словарь с изменёнными данными из json
 
-yes_or_no:<br>
+<h3>yes_or_no:</h3>
 
 ```python
 from tpg import * #inport libs
