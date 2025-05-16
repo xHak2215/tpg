@@ -36,6 +36,7 @@ out=settings({},jsonf='test_json.json')# read and write json file
 print(out) # print new dict 
 
 ```
+![hippo](doc/settings_ui_test.png)
 
 в 1 случае в функцию был передан словарь он может быть с любыми ключами и их количеством но  
 значения должно быть true или false функция вернет обновлённый словарь измененый пользователем<br><br>
