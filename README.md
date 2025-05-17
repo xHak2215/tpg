@@ -69,5 +69,15 @@ print(color('clear')) # clear colors очистка цветов
 print('text')
 ```
 
+есть цвета : <br> 
+blak <br> 
+red <br> 
+green <br> 
+yelou <br> 
+blue <br> 
+violet <br> 
+beruza <br> 
+white <br> 
+подходят как для заднего фона так и для цвета текста 
 
 
