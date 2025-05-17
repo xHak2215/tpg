@@ -57,3 +57,17 @@ else:
 ```
 передаеться 1 аргумент отвечающий за натрись в верху <br> 
 возврощаеться True если выбрано yes и false если no 
+
+<h3>color:</h3>
+
+```python
+from tpg import * #inport libs
+
+# color color/цвет,stule/стиль,beggraubd/задний фон
+print(color('red','standart','yelou')+'green text,yelou begraund') 
+print(color('clear')) # clear colors очистка цветов 
+print('text')
+```
+
+
+
