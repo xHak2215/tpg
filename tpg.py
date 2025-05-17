@@ -4,7 +4,7 @@ import time
 
 import keyboard
 
-def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart')->str:
+def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi='\033[0m')->str:
     cursor=0
     while True:
         cor=''
@@ -25,13 +25,14 @@ def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart')->str
                     cor=kastcor
                 else:
                     cor=' '
-                print(cor+str(unitperedvogenielist[i]))
+                print(ansi+cor+str(unitperedvogenielist[i]))
             elif style=='scob':
                 if cursor==i:
                     cor='+'
                 else:
                     cor=''
-                print('['+cor+']'+str(unitperedvogenielist[i]))
+                prob=' '*(max(0,15-len(str(unitperedvogenielist[i]))))
+                print(ansi+f'{str(unitperedvogenielist[i])}{prob}({cor})')
             else:
                 raise SyntaxError('no style'+style)
             #if type(unitperedvogenielist[i])=="dict":
@@ -39,7 +40,6 @@ def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart')->str
             #        print('  '+cor+a+'ᐁ')
             #        for s in a:
             #            print(s)
-            
         if keyboard.is_pressed('enter'):
             unitperedvogenie=unitperedvogenielist[cursor]
             while keyboard.is_pressed('enter'):
@@ -47,7 +47,7 @@ def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart')->str
             return unitperedvogenie
         os.system('clear') 
         
-def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None)->str:
+def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033[0')->str:
     cursor=0
     if os.path.isfile(jsonf):
             with open(jsonf, "r") as json_settings:
@@ -87,7 +87,7 @@ def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None)->str:
                     flag='+'
                 else:       
                     flag='-'
-            print(cor+punkt+ ' ' * int(20 - len(punkt)) +'['+flag+']')
+            print(ansi+cor+punkt+ ' ' * int(20 - len(punkt)) +'['+flag+']')
         if keyboard.is_pressed('enter'):
             if data[list(data.keys())[cursor]]:
                 data[list(data.keys())[cursor]]=False
