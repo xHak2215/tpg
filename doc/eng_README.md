@@ -27,7 +27,7 @@ print(out_point)
 **Controls:** Move the cursor up/down with arrow keys, change selection with Enter, exit with Esc.  
 
 **How it looks:**  
-![hippo](doc/list_test.gif)  
+![hippo](list_test.gif)  
 
 ---
 
@@ -44,7 +44,7 @@ out = settings({}, jsonf='test_json.json')
 print(out)  # Returns the modified dict from the JSON file  
 ```  
 
-![hippo](doc/settings_ui_test.gif)  
+![hippo](settings_ui_test.gif)  
 
 - In the **first case**, a dictionary is passed (can have any keys, but values must be `True` or `False`). The function returns the updated dictionary after user modifications.  
 - In the **second case**, the dictionary is loaded from a JSON file (specified in `jsonf`). After user changes, the JSON file is updated, and the function returns the modified dictionary.  
