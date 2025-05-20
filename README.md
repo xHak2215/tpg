@@ -4,7 +4,7 @@
   <ol>
     <li>
       <ul>
-      <li><a href="https://github.com/">English</a></li>
+      <li><a href="https://github.com/xHak2215/tpg/blob/main/doc/eng_README.md">English</a></li>
       </ul>
     </li>
 </details>
