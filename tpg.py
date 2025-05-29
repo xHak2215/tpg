@@ -1,6 +1,9 @@
 import json
 import os
 import time
+import sys
+import msvcrt
+import ansi
 
 import keyboard
 
@@ -45,7 +48,10 @@ def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi=
             while keyboard.is_pressed('enter'):
                 time.sleep(0.1)
             return unitperedvogenie
-        os.system('clear') 
+        if os.name == 'nt': 
+            os.system("cls")
+        else:
+            os.system("clear")
         
 def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033[0')->str:
     cursor=0
@@ -95,41 +101,12 @@ def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033
                 data[list(data.keys())[cursor]]=True
             while keyboard.is_pressed('enter'):
                 time.sleep(0.1)
-        os.system('clear') 
+        if os.name == 'nt': 
+            os.system("cls")
+        else:
+            os.system("clear")
         
-class ansi:
-    def __init__(self):
-        self.stule={
-            'standart':0,
-            'big':1,
-            'tone':2,
-            'kursive':3,
-            'line':4,
-            'mercanie':5
-        }
-        self.color={
-            'blak':30,
-            'red':31,
-            'green':32,
-            'yelou':33,
-            'blue':34,
-            'violet':35,
-            'beruza':36,
-            'white':37,
-            'clear':0
-        }
-        self.beggraubd={
-            'blak':40,
-            'red':41,
-            'green':42,
-            'yelou':43,
-            'blue':44,
-            'violet':45,
-            'beruza':46,
-            'white':47,
-            'clear':0
-            
-        }
+
 def color(color,stule='standart',begraund='blak')->str:#color,stule,beggraubd
     #if len(ansis)>3:
     #    
@@ -180,8 +157,12 @@ def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no'):
             return out
         print(' '*(10-len(text))+text)
         print(f'{' '*15}{yes}{yestxt} {no}{notxt}')
-        os.system('clear')
+        if os.name == 'nt': 
+            os.system("cls")
+        else:
+            os.system("clear")
         
+
         
 def cursor(x:int,y:int,text:str)->str:
     if y >0:
@@ -192,13 +173,18 @@ def cursor(x:int,y:int,text:str)->str:
         print(f"\033[{x}C{text}")#в перед 
     else:
         print(f"\033[{x}D{text}")# на зад
+           
         
 def clear():
-    print("\033[2J"+'\033[0',end='') #очистка 
-    os.system("clear")
+    print("\033[2J"+'\033[0',end='') #очистка
+    if os.name == 'nt': 
+        os.system("cls")
+    else:
+        os.system("clear")
+        
+    
 
-    
-    
+
     
 
 
