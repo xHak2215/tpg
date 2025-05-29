@@ -87,7 +87,7 @@ print('text')
 blak <br> 
 red <br> 
 green <br> 
-yelou <br> 
+yellow <br> 
 blue <br> 
 violet <br> 
 beruza <br> 
