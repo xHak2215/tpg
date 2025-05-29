@@ -95,7 +95,7 @@ class ansi:
             'blak':30,
             'red':31,
             'green':32,
-            'yelou':33,
+            'yellow':33,
             'blue':34,
             'violet':35,
             'beruza':36,
