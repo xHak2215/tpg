@@ -106,6 +106,9 @@ def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033
         else:
             os.system("clear")
         
+def terminal_size():
+    # X , Y 
+    return [int(os.get_terminal_size().columns) , int(os.get_terminal_size().lines)]
 
 def color(color,stule='standart',begraund='blak')->str:#color,stule,beggraubd
     #if len(ansis)>3:
@@ -136,10 +139,11 @@ def cursor(x:int,y:int,text:str)->str:
         print(f"\033[{x}D{text}")# на зад
         
     
-def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no'):
+def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no',midst=False):
     out=False
     yes=''
     no='>'
+    otst=0
     while True:
         print('\n'*13)
         if keyboard.is_pressed('left'):
@@ -155,8 +159,9 @@ def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no'):
                 time.sleep(0.1)
                 pass
             return out
-        print(' '*(10-len(text))+text)
-        print(f'{' '*15}{yes}{yestxt} {no}{notxt}')
+        if midst:otst=round(terminal_size()[0]/2)
+        print(' '*otst+text)
+        print(f'{' '*otst}{yes}{yestxt} {no}{notxt}')
         if os.name == 'nt': 
             os.system("cls")
         else:
@@ -181,6 +186,10 @@ def clear():
         os.system("cls")
     else:
         os.system("clear")
+
+def ramka(text):
+    ots=' '*(int(round(terminal_size()[0]/2))-int(len(text)+2))
+    return f'{ots}╔{'═'*len(text)}╗\n{ots}║{text}║\n{ots}╚{'═'*len(text)}╝'
         
     
 
