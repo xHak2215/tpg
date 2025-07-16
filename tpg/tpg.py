@@ -198,11 +198,13 @@ class InputMany:
         self.output = []
         self.lock = threading.Lock()  # Для безопасного доступа к output
     
-    def input_at(self, x: int, y: int, prompt: str):
+    def input_at(self, x: int, y: int, prompt: str): 
         """Создает поле ввода в указанных координатах"""
         # Перемещаем курсор и выводим приглашение
         with self.lock:
             sys.stdout.write(f"\033[{y};{x}H{prompt}")
+            input_pos = x + len(prompt)
+            sys.stdout.write(f"\033[{y};{input_pos}H")
             sys.stdout.flush()
         
         # Читаем ввод
@@ -213,7 +215,7 @@ class InputMany:
             self.output.append(user_input.strip())
     
     def gather_inputs(self, *coordinates):
-        """Запускает несколько полей ввода одновременно"""
+        """### Запускает несколько полей ввода одновременно"""
         threads = []
         
         for x, y, prompt in coordinates:
@@ -240,25 +242,35 @@ class display:
             templist.append(temp)
         self.display=templist
         
-    def box(self,px:int, py:int, x:int, y:int,blok='█',begraund=' '):
-        '''
-        :param1: length box
+    def box(self,px:int, py:int, x:int, y:int,blok='█'):
+        """### create box
+
+        Args:
+            px (int): length box
+            py (int): height box
+            x (int): X Corridate
+            y (int): Y Corridate
+            blok (str, optional): symbol box. Defaults to '█'.
+        """
         
-        :param2: height box
-        
-        :param3: X Corridate
-        
-        :param4: Y Corridate
-        '''
-        self.display[y]
+        for xpos in range(x,x+px):
+            self.display[y][xpos] = blok
+            
+        for y in range(y,y+py):
+            self.display[y][x] = blok
+            self.display[y][x+px] = blok
+            
+        for xpos in range(x,x+px):
+            self.display[py][xpos] = blok
         
     def cursor(self ,x : int, y : int, symbol='█'):
         try:
-            line=self.display[y]
+            self.display[y]
         except KeyError:
             raise KeyError(f'no the lines end lines {len(self.display)}')
         try:
-            self.display[y][x]=line[x] = symbol
+            for xs in range(x,x+len(symbol)):
+                self.display[y][xs] = symbol[xs-x]
         except KeyError:
             raise KeyError(f'There is no such symbol')
     
@@ -270,13 +282,4 @@ class display:
             strings+='\n'
         print(strings, end=end)
             
-        
-        
-        
-    
-
-
-    
-
-
         
