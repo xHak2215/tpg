@@ -110,6 +110,7 @@ print('text')
 
 - cursor
 - echo
+- box
 
 примеры:
 
@@ -123,6 +124,23 @@ displu=tpg.display()
 displu.cursor(5,5)
 
 displu.echo()
+
+```
+
+вывод 2 прямоугольников (квадратов с задаными свойствами) где в одном находиться текст а другой залит
+
+```python
+import tpg
+
+displu=tpg.display()
+
+displu.box(15, 11, 1, 1,blok='@')
+
+displu.box(15, 11, 22, 1, filling=True)
+
+displu.cursor(3,3 ,symbol='hi')
+
+displu.echo(end='\n')
 
 ```
 
