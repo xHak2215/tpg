@@ -85,12 +85,11 @@ else:
 ### color:
 
 ```python
-import tpg 
+from tpg import * #inport libs
 
 # color color/цвет,stule/стиль,beggraubd/задний фон
-print(color('red','standart','yelou')+'green text,yelou begraund') 
-print(color('clear')) # clear colors очистка цветов 
-print('text')
+print(color("green text,yelou begraund",'red','standart','yelou')) 
+print('text') 
 ```
 
 есть цвета :
@@ -126,3 +125,4 @@ displu.cursor(5,5)
 displu.echo()
 
 ```
+
