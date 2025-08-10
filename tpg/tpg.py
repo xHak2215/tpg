@@ -119,9 +119,20 @@ def terminal_size() ->list:
     # X , Y 
     return [int(os.get_terminal_size().columns) , int(os.get_terminal_size().lines)]
 
-def color(color,stule='standart',begraund='blak')->str:#color,stule,beggraubd
-    #if len(ansis)>3:
-    #    
+def color(text,color,stule='standart',begraund='blak',end='\33[0m')->str:#text,color,stule,beggraubd
+    r"""позволяет перекрашивать цвет работает на `ansi`
+
+    Args:
+        text (_str_): текст который будет перекрашен
+        color (_srt_): цвет текста
+        stule (str, optional): стиль. Defaults to 'standart'.
+        begraund (str, optional): задний фон. Defaults to 'blak'.
+        end (str, optional): конец строки. Defaults to '\33[0'.
+
+    Returns:
+        str: текст с `ansi` кодами
+    """
+    
     self=ansi()
     try:
         stule=self.stule[stule]
@@ -135,7 +146,7 @@ def color(color,stule='standart',begraund='blak')->str:#color,stule,beggraubd
         begraund=self.beggraubd[begraund]
     except KeyError:
         raise KeyError(f'error Not correct parameters , parameters :{self.beggraubd.keys()} ')
-    return f'\33[{stule};{color};{begraund}m'
+    return f"\33[{stule};{color};{begraund}m{text}{end}"
     
 def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no',midst=False):
     out=False
@@ -182,7 +193,7 @@ else:
 '''           
         
 def clear():
-    print("\033[2J"+'\033[0',end='') #очистка
+    print('\033[0m') #очистка
     if os.name == 'nt': 
         os.system("cls")
     else:
@@ -242,7 +253,7 @@ class display:
             templist.append(temp)
         self.display=templist
         
-    def box(self,px:int, py:int, x:int, y:int,blok='█'):
+    def box(self,px:int, py:int, x:int, y:int, blok='█', filling=False):
         """### create box
 
         Args:
@@ -251,18 +262,23 @@ class display:
             x (int): X Corridate
             y (int): Y Corridate
             blok (str, optional): symbol box. Defaults to '█'.
+            filling (bool): заполнен ли квадрат
         """
         
         for xpos in range(x,x+px):
             self.display[y][xpos] = blok
             
-        for y in range(y,y+py):
-            self.display[y][x] = blok
-            self.display[y][x+px] = blok
-            
+        if filling:
+            for y in range(y,y+py):
+                for xe in range(x,x+px):
+                    self.display[y][xe] = blok
+        else:
+            for y in range(y,y+py):
+                self.display[y][x] = blok
+                self.display[y][x+px] = blok   
+                 
         for xpos in range(x,x+px):
             self.display[py][xpos] = blok
-        
     def cursor(self ,x : int, y : int, symbol='█'):
         try:
             self.display[y]
@@ -274,12 +290,32 @@ class display:
         except KeyError:
             raise KeyError(f'There is no such symbol')
     
-    def echo(self,end='\r') -> str:
+    def clear_display(self):
+        """### clear display"""
+        
+        self.display={}
+        templist=[]
+        size=terminal_size()
+        for lens in range(size[1]): 
+            temp={}
+            for i in range(size[0]):
+                temp[i]=' '
+            templist.append(temp)
+        self.display=templist
+    
+    def echo(self, end='\r') -> str:
+        """выводит буфер на экран
+
+        Args:
+            end (str, optional): аргумент end. Defaults to '\r'.
+
+        Returns:
+            str: содержимое буфера
+        """
+        
         strings='' # НЕ СТРИНГИ А СТРОКИ
         for i in self.display:
             for st in list(dict(i).keys()):
                 strings=strings+i[st]
             strings+='\n'
         print(strings, end=end)
-            
-        
