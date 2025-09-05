@@ -33,7 +33,7 @@ ansi - enables using ANSI escape sequences in the menu. Just pass an ANSI sequen
 
 What it looks like:
 
-![hippo](doc/list_test.gif)
+![hippo](list_test.gif)
 
 settings:
 
@@ -47,7 +47,7 @@ out = settings({}, jsonf='test_json.json') # read and write json file
 
 print(out) # print new dict
 ```
-![hippo](doc/settings_ui_test.gif)
+![hippo](settings_ui_test.gif)
 
 
 In the first case, a dictionary is passed to the function. It can have any keys and quantity, but the values must be true or false. The function returns the dictionary updated by the user.
