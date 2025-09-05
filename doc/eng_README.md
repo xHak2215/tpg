@@ -1,121 +1,130 @@
-
-<details>
-  <summary>languages</summary>
-    <li>
-      <ul>
-      <li><a href="https://github.com/xHak2215/tpg/blob/main/doc/eng_README.md">English</a></li>
-      </ul>
-    </li>
-</details>
-
 TPG - Terminal Python Graphics (UI)
-A small library for creating graphical interfaces
+A lightweight library for creating graphical user interfaces in the terminal.
 
-Library features include:
+The library's functionality includes:
 
-- Lists
-- Simplified color handling (ANSI)
-- Console cursor control
-- Yes/No selection menu
-- Settings with JSON support
+· Lists
+· Simplified color handling (ANSI)
+· Console cursor control
+· Selection menus (yes/no)
+· JSON-supported settings
 
 Examples and basic functionality:
-Control: Move cursor up/down with arrows, select with Enter
+Control: move cursor up/down with arrow keys, select with Enter.
 
 ---
 
-### listgr:
+listgr:
 
 ```python
-import tpg # import lib
-out_point = listgr(['point1','point2','point3'])
+import tpg # import library
+out_point = listgr(['point1', 'point2', 'point3'])
 print(out_point)
 ```
 
 Arguments:
+kastor - parameter for the cursor symbol displayed before the selected item (default is '>')
+title - text displayed above the list
+style - display style, default is 'standart', other option is 'scob'
 
-- kastor - parameter for the cursor symbol before selected item (default '>')
-- title - text above the list
-- style - default style 'standard', other option 'scob'
-Control: Move cursor up/down with arrows, change with Enter, exit with Esc
-- ansi - ability to use ANSI escape sequences in the menu, just pass the ANSI sequence (recommended to use the `color` function described below)
+Control: move cursor up/down with arrow keys, change selection with Enter, exit with Esc.
 
-How it looks:
+ansi - enables using ANSI escape sequences in the menu. Just pass an ANSI sequence (recommended to use the color function described below).
 
-![hippo](doc/list_test.gif)
+What it looks like:
 
-### settings:
+doc/list_test.gif
+
+settings:
 
 ```python
-import tpg # import lib
+import tpg # import library
 
-out = settings({'point1':True,'point2':False}) # change dict
+out = settings({'point1': True, 'point2': False}) # change dict
 print(out) # print updated dict from json file
 
 out = settings({}, jsonf='test_json.json') # read and write json file
-print(out) # print updated dict
+
+print(out) # print new dict
 ```
 
-![hippo](doc/settings_ui_test.gif)
+doc/settings_ui_test.gif
 
-In the first case, a dictionary is passed to the function. It can have any keys and any number of them, but values must be True or False. The function returns the updated dictionary modified by the user.
+In the first case, a dictionary is passed to the function. It can have any keys and quantity, but the values must be true or false. The function returns the dictionary updated by the user.
 
-In the second case, the dictionary is loaded from a JSON file specified in the `jsonf` argument. After user modifications, the JSON file will be updated and the function will return the modified dictionary from the JSON.
+In the second case, the dictionary is loaded from a JSON file specified in the jsonf argument. After user modifications, the JSON file will be updated, and the function will return a dictionary with the modified data from the JSON.
 
-### yes_or_no:
+yes_or_no:
 
 ```python
-import tpg # import lib
+import tpg # import library
 
 if yes_or_no('yes or no'): # yes - True, no - False
-    print("Pressed yes")
+    print("pressed yes")
 else:
-    print('Pressed no')
+    print('pressed no')
 ```
 
-Takes one argument for the prompt text at the top.
-Returns True if 'yes' is selected and False if 'no' is selected.
+Accepts 1 argument for the prompt text at the top.
+Returns True if "yes" is selected, and False if "no" is selected.
 
-### color:
+color:
 
 ```python
-import tpg 
+from tpg import * # import library
 
-# color color/text_color, style, background/background_color
-print(color('red','standard','yellow') + 'green text, yellow background') 
-print(color('clear')) # clear colors
+# color color, style, background
+print(color("green text, yellow background", 'red', 'standart', 'yellow'))
 print('text')
 ```
 
 Available colors:
 
-- black
-- red
-- green
-- yellow
-- blue
-- violet
-- turquoise
-- white
-Can be used for both text and background colors
+· black
+· red
+· green
+· yellow
+· blue
+· violet
+· cyan
+· white
 
-## display class:
+Suitable for both background and text color.
+
+display class:
 
 Functions:
 
-- cursor
-- echo
+· cursor
+· echo
+· box
 
 Examples:
 
-Text output by coordinates:
+Output text at specific coordinates:
 
 ```python
 import tpg
 
 display = tpg.display()
 
-display.cursor(5,5)
+display.cursor(5, 5)
 
 display.echo()
+```
+
+Output 2 rectangles (squares with specified properties), one containing text and the other filled:
+
+```python
+import tpg
+
+display = tpg.display()
+
+display.box(15, 11, 1, 1, blok='@')
+
+display.box(15, 11, 22, 1, filling=True)
+
+display.cursor(3, 3, symbol='hi')
+
+display.echo(end='\n')
 ```
