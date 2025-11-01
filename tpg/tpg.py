@@ -321,8 +321,12 @@ class display:
         print(strings, end=end)
         
         
-def write_to_log_file(file, t):
-    with open(file, 'a', buffering=1) as f:
+def write_to_log_file(file, t ,path_save_log):
+    if path_save_log:
+        path=os.path.join(path_save_log, file)
+    else:
+        path=file
+    with open(path, 'a', buffering=1) as f:
         f.write(t+'\n')        
 
 class logse:
@@ -331,6 +335,7 @@ class logse:
         self.level=2
         self.seve_log_file=True
         self.patern=f"{datetime.now().strftime(r"%Y-%m-%d %H:%M:%S")} |{sys._getframe(1).f_locals['__file__']}| line:{traceback.extract_stack()[-2].lineno} |"
+        self.path_save_log=None
         
         # color
         self.color_green='\33[32m'
