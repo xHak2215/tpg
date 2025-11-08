@@ -6,7 +6,7 @@ import threading
 import traceback
 from datetime import datetime
 
-from .ansi import  ansi, art
+from .ansi import  ansi , art
 
 import keyboard
 
@@ -109,15 +109,15 @@ def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033
         else:
             os.system("clear")
         
-def terminal_size() ->list:
+def terminal_size() ->tuple:
     """
     terminal size
     
     Returns:
-        list: 0 - height. 1 - lines num
+        tuple: 0 - height. 1 - lines num
     """
     # X , Y 
-    return [int(os.get_terminal_size().columns) , int(os.get_terminal_size().lines)]
+    return (int(os.get_terminal_size().columns) , int(os.get_terminal_size().lines))
 
 def color(text,color,stule='standart',begraund='blak',end='\33[0m')->str:#text,color,stule,beggraubd
     r"""позволяет перекрашивать цвет работает на `ansi`
@@ -199,10 +199,21 @@ def clear():
     else:
         os.system("clear")
 
-def ramka(text):
+def frame(text:str, x=-1, y=-1)->str:
+    
     text=str(text)
-    ots=' '*(int(round(terminal_size()[0]/2))-int(len(text)+2))
-    return f'{ots}╔{'═'*len(text)}╗\n{ots}║{text}║\n{ots}╚{'═'*len(text)}╝'
+    split=text.split('\n')
+    
+    if x==-1 and y==-1:
+        ots=' '*(int(round(terminal_size()[0]/2))-int(len(text)+2))
+    else:
+        ots=' '*x
+    temp_string=f"{ots}╔{'═'*len(max(split, key=len))}╗"
+    for t in split:
+        temp_string=temp_string+f"\n{ots}║{t}{' '*(len(max(split, key=len))-len(t))}║"
+    temp_string=temp_string+f"\n{ots}╚{'═'*len(max(split, key=len))}╝"
+        
+    return temp_string
 
 class InputMany:
     def __init__(self):
