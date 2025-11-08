@@ -265,7 +265,10 @@ class display:
             filling (bool): заполнен ли квадрат
         """
         
-        for xpos in range(x,x+px):
+        if y>len(self.display):
+            raise TypeError(f"Y goes beyond (max {len(self.display)} )")
+        
+        for xpos in range(x, x+px):
             self.display[y][xpos] = blok
             
         if filling:
@@ -278,7 +281,7 @@ class display:
                 self.display[y][x+px] = blok   
                  
         for xpos in range(x,x+px):
-            self.display[py][xpos] = blok
+            self.display[y][xpos] = blok
     def cursor(self ,x : int, y : int, symbol='█'):
         try:
             self.display[y]
