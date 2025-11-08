@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 import os
 
 def readme():
-#  with open(f'{os.getcwd()}\\README.md', 'r') as f:
-    return ''#f.read()
+  with open(os.path.join(os.getcwd(),"README.md"), 'r') as f:
+    return f.read()
 
 
 setup(
   name='tpg',
-  version='1.0.0',
+  version='1.5.2',
   author='@HITHELL',
   author_email='hit<@HITHELL.com>',
   description="легкая библиотека для работы с псевдо графикой в терминале",
@@ -19,12 +19,12 @@ setup(
   install_requires=['keyboard>=2.25.1'],
   classifiers=[
     'Programming Language :: Python :: 3.11',
-    'License :: OSI Approved :: MIT License',
-    'Operating System :: OS Independent'
+    'License :: MIT License',
+    'Operating System :: Windows'
   ],
-  keywords='terminal_py_grafic.py',
+  keywords='tpg/tpg.py',
   project_urls={
     'GitHub': 'https://github.com/xHak2215/tpg'
   },
-  python_requires='>=3.6'
+  python_requires='>=3.12'
 )
