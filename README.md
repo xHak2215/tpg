@@ -1,11 +1,9 @@
 
 </details>
   <summary>languages</summary>
-    <li>
       <ul>
       <li><a href="https://github.com/xHak2215/tpg/blob/main/doc/eng_README.md">English</a></li>
       </ul>
-    </li>
 </details>
 
 TPG - terminal python graphics (UI)
@@ -180,4 +178,5 @@ error -3 уровень логирования
 - level - отображаемый уровень логирования. **-1** - не отображаються никаие уровни, **0** - только `info`, **1** - `info` и `warning`, **2** - все уровни логирования( `info`, `warning`, `error`)
 - patern - это единая заготовка строки лог файла по умаолчанию содержит дату и время и путь к запущеному файлу
 - path_save_log - путь к дериктории в которой будет сохроняться лог файл, если равен None то сохронение происходит в тикущий деректорий файла 
+
 
