@@ -11,7 +11,7 @@ from .ansi import  ansi , art
 
 import keyboard
 
-def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi='\033[0m')->str:
+def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi='\033[0m')->str|None:
     cursor=0
     while True:
         cor=''
@@ -59,7 +59,7 @@ def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi=
         
 def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033[0m')->str:
     cursor=0
-    if os.path.isfile(jsonf):
+    if jsonf and os.path.isfile(jsonf):
             with open(jsonf, "r") as json_settings:
                 data = json.load(json_settings)
     else:
@@ -178,7 +178,7 @@ def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no',midst=False):
             os.system("clear")
         
 
-def cursor(x:int,y:int,display='█',fone=' ')->str:
+def cursor(x:int,y:int,display='█',fone=' '):
     print(('\n'*y)+(fone*x+display))
     
     
@@ -318,7 +318,7 @@ class display:
             templist.append(temp)
         self.display=templist
     
-    def echo(self, end='\r') -> str:
+    def echo(self, end='\r'):
         """выводит буфер на экран
 
         Args:
