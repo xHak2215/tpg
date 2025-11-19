@@ -11,7 +11,7 @@ from .ansi import  ansi , art
 
 import keyboard
 
-def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi='\033[0m')->str|None:
+def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi='\033[0m')->str:
     cursor=0
     while True:
         cor=''
@@ -59,7 +59,7 @@ def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi=
         
 def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033[0m')->str:
     cursor=0
-    if jsonf and os.path.isfile(jsonf):
+    if os.path.isfile(jsonf):
             with open(jsonf, "r") as json_settings:
                 data = json.load(json_settings)
     else:
@@ -178,7 +178,7 @@ def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no',midst=False):
             os.system("clear")
         
 
-def cursor(x:int,y:int,display='█',fone=' '):
+def cursor(x:int,y:int,display='█',fone=' ')->str:
     print(('\n'*y)+(fone*x+display))
     
     
@@ -294,6 +294,7 @@ class display:
                  
         for xpos in range(x,x+px):
             self.display[y][xpos] = blok
+            
     def cursor(self ,x : int, y : int, symbol='█'):
         try:
             self.display[y]
@@ -304,7 +305,39 @@ class display:
                 self.display[y][xs] = symbol[xs-x]
         except KeyError:
             raise KeyError(f'There is no such symbol')
-    
+        
+    def line(self, point1:tuple, point2:tuple, blok='█'):
+        """
+        Рисует линию между point1 и point2.
+        """
+        x0, y0 = point1
+        
+        x1, y1 = point2
+        
+        if y0 < 0 or y1 < 0 or y0 >= len(self.display) or y1 >= len(self.display):
+            raise TypeError(f"Y goes beyond (max {len(self.display)-1})")
+
+        dx = abs(x1 - x0)
+        sx = 1 if x0 < x1 else -1
+        dy = -abs(y1 - y0)
+        sy = 1 if y0 < y1 else -1
+        err = dx + dy
+
+        x, y = x0, y0
+        while True:
+            # проверяем, что строка существует (по Y) — уже гарантировано; по X используем запись в словарь
+            self.display[y][x] = blok
+            if x == x1 and y == y1:
+                break
+            e2 = 2 * err
+            if e2 >= dy:
+                err += dy
+                x += sx
+            if e2 <= dx:
+                err += dx
+                y += sy
+
+
     def clear_display(self):
         """### clear display"""
         
@@ -318,7 +351,7 @@ class display:
             templist.append(temp)
         self.display=templist
     
-    def echo(self, end='\r'):
+    def echo(self, end='\r') -> str:
         """выводит буфер на экран
 
         Args:
