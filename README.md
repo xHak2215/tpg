@@ -114,6 +114,7 @@ print('text')
 - echo
 - box
 - clear_display
+- line
 
 примеры:
 
@@ -145,6 +146,18 @@ displu.cursor(3,3 ,symbol='hi')
 
 displu.echo(end='\n')
 
+```
+
+рисовка линий:
+
+```
+import tpg
+
+displu=tpg.display()
+
+displu.line((2,2), (32,5))
+
+displu.echo()
 ```
 
 ## класс logse 
@@ -185,6 +198,7 @@ error -3 уровень логирования
 **вот как он выглядит:**
 
 ![hippo](doc/log_test.png)
+
 
 
 
