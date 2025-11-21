@@ -265,7 +265,7 @@ class display:
             templist.append(temp)
         self.display=templist
         
-    def box(self,px:int, py:int, x:int, y:int, blok='█', filling=False):
+    def box(self,px:int, py:int, x:int, y:int, symbol='█', filling=False):
         """### create box
 
         Args:
@@ -273,7 +273,7 @@ class display:
             py (int): height box
             x (int): X Corridate
             y (int): Y Corridate
-            blok (str, optional): symbol box. Defaults to '█'.
+            symbol (str, optional): symbol box. Defaults to '█'.
             filling (bool): заполнен ли квадрат
         """
         
@@ -281,19 +281,19 @@ class display:
             raise TypeError(f"Y goes beyond (max {len(self.display)} )")
         
         for xpos in range(x, x+px):
-            self.display[y][xpos] = blok
+            self.display[y][xpos] = symbol
             
         if filling:
             for y in range(y,y+py):
                 for xe in range(x,x+px):
-                    self.display[y][xe] = blok
+                    self.display[y][xe] = symbol
         else:
             for y in range(y,y+py):
-                self.display[y][x] = blok
-                self.display[y][x+px] = blok   
+                self.display[y][x] = symbol
+                self.display[y][x+px] = symbol   
                  
         for xpos in range(x,x+px):
-            self.display[y][xpos] = blok
+            self.display[y][xpos] = symbol
             
     def cursor(self ,x : int, y : int, symbol='█'):
         try:
@@ -301,12 +301,11 @@ class display:
         except KeyError:
             raise KeyError(f'no the lines end lines {len(self.display)}')
         try:
-            for xs in range(x,x+len(symbol)):
-                self.display[y][xs] = symbol[xs-x]
+            self.display[y][x] = symbol
         except KeyError:
             raise KeyError(f'There is no such symbol')
-        
-    def line(self, point1:tuple, point2:tuple, blok='█'):
+    
+    def line(self, point1:tuple, point2:tuple, symbol='█'):
         """
         Рисует линию между point1 и point2.
         """
@@ -326,7 +325,7 @@ class display:
         x, y = x0, y0
         while True:
             # проверяем, что строка существует (по Y) — уже гарантировано; по X используем запись в словарь
-            self.display[y][x] = blok
+            self.display[y][x] = symbol
             if x == x1 and y == y1:
                 break
             e2 = 2 * err
@@ -336,7 +335,47 @@ class display:
             if e2 <= dx:
                 err += dx
                 y += sy
+    
+    def circle(self, cx: int, cy: int, radius: int, symbol='█'):
+        """### функция рисующая круг
 
+        Args: 
+            x (int): X координата 
+            y (int): Y координата  
+            radius (int): радиус круга
+        """ 
+        if radius < 0:
+            return
+
+        rows = len(self.display)
+        cols = len(self.display[0]) if rows > 0 else 0
+        xcolibrate = radius + round( cx/100 * 35 )
+
+        def plot(x, y):
+            if 0 <= y < rows and 0 <= x < cols:
+                self.display[y][x] = symbol
+
+        x = 0
+        y = radius
+        d = 3 - 2 * radius
+
+        while x <= y:
+            plot(cx + x, cy + y)
+            plot(cx - x, cy + y)
+            plot(cx + x, cy - y)
+            plot(cx - x, cy - y)
+            
+            plot(cx + y, cy + x)
+            plot(cx - y, cy + x)
+            plot(cx + y, cy - x)
+            plot(cx - y, cy - x)
+
+            if d <= 0:
+                d = d + 4 * x + 6
+            else:
+                d = d + 4 * (x - y) + 10
+                y -= 1
+            x += 1
 
     def clear_display(self):
         """### clear display"""
