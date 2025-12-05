@@ -12,7 +12,7 @@ from .ansi import  ansi, art
 import keyboard
 import subprocess
 
-def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi='\033[0m')->str:
+def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', ansi='\033[0m')->str:
     cursor=0
     while True:
         cor=''
@@ -296,8 +296,10 @@ class display:
             filling (bool): заполнен ли квадрат
         """
         
-        if y>len(self.display):
-            raise TypeError(f"Y goes beyond (max {len(self.display)} )")
+        if y>len(self.display)+py:
+            raise TypeError(f"Y goes beyond (max {len(self.display)})")
+        if x>len(self.display[0])+px:
+            raise TypeError(f"X goes beyond (max {len(self.display[0])})")
         
         for xpos in range(x, x+px):
             self.display[y][xpos] = symbol
