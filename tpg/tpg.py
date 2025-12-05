@@ -172,7 +172,7 @@ def yes_ro_no(text:str, kastcor='>', yestxt='yes', notxt='no', midst=False, deep
             key = event.name
         else:
             key='-'
-        if key :
+        if key:
             if os.name == 'nt': 
                 os.system("cls")
             else:
