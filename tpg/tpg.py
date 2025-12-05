@@ -7,9 +7,10 @@ import traceback
 from datetime import datetime
 import inspect
 
-from .ansi import  ansi , art
+from .ansi import  ansi, art
 
 import keyboard
+import subprocess
 
 def listgr(unitperedvogenielist:list,kastcor='>',title='',style='standart',ansi='\033[0m')->str:
     cursor=0
@@ -120,6 +121,17 @@ def terminal_size() ->tuple:
     # X , Y 
     return (int(os.get_terminal_size().columns) , int(os.get_terminal_size().lines))
 
+def is_terminal_focused():
+    if os.name == 'nt': 
+        return True
+    else:
+        try:
+            active = subprocess.check_output(["xdotool", "getwindowfocus", "getwindowpid"])
+            return int(active.strip()) == os.getpid()
+        except Exception as e:
+            return True
+
+
 def color(text,color,stule='standart',begraund='blak',end='\33[0m')->str:#text,color,stule,beggraubd
     r"""позволяет перекрашивать цвет работает на `ansi`
 
@@ -149,34 +161,41 @@ def color(text,color,stule='standart',begraund='blak',end='\33[0m')->str:#text,c
         raise KeyError(f'error Not correct parameters , parameters :{self.beggraubd.keys()} ')
     return f"\33[{stule};{color};{begraund}m{text}{end}"
     
-def yes_ro_no(text:str,kastcor='>',yestxt='yes',notxt='no',midst=False):
+def yes_ro_no(text:str, kastcor='>', yestxt='yes', notxt='no', midst=False, deep=terminal_size()[1]-3):
     out=False
     yes=''
     no='>'
     otst=0
+    event=None
     while True:
-        print('\n'*13)
-        if keyboard.is_pressed('left'):
-            yes=kastcor
-            no=''
-            out=True
-        if keyboard.is_pressed('right'):
-            no=kastcor
-            yes=''
-            out=False
-        if keyboard.is_pressed('enter'):
-            while keyboard.is_pressed('enter'):
-                time.sleep(0.1)
-                pass
-            return out
-        if midst:otst=round(terminal_size()[0]/2)
-        print(' '*otst+text)
-        print(f'{' '*otst}{yes}{yestxt} {no}{notxt}')
-        if os.name == 'nt': 
-            os.system("cls")
+        if event:
+            key = event.name
         else:
-            os.system("clear")
-        
+            key='-'
+        if key :
+            if os.name == 'nt': 
+                os.system("cls")
+            else:
+                os.system("clear")
+                
+            if key == 'left':
+                yes=kastcor
+                no=''
+                out=True
+            if key == 'right':
+                no=kastcor
+                yes=''
+                out=False
+            if key == 'enter':
+                while keyboard.is_pressed('enter'):
+                    time.sleep(0.1)
+                    pass
+                return out
+            if midst:
+                otst=terminal_size()[0] // 2
+            print(f"{'\n'*deep}{' '*otst}{text}\n{' '*otst}{yes}{yestxt} {no}{notxt}")
+            
+        event = keyboard.read_event()    
 
 def cursor(x:int,y:int,display='█',fone=' ')->str:
     print(('\n'*y)+(fone*x+display))
@@ -324,7 +343,7 @@ class display:
 
         x, y = x0, y0
         while True:
-            # проверяем, что строка существует (по Y) — уже гарантировано; по X используем запись в словарь
+            # проверяем, что строка существует (по Y) - уже гарантировано; по X используем запись в словарь
             self.display[y][x] = symbol
             if x == x1 and y == y1:
                 break
@@ -336,7 +355,7 @@ class display:
                 err += dx
                 y += sy
     
-    def circle(self, cx: int, cy: int, radius: int, symbol='█'):
+    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0):
         """### функция рисующая круг
 
         Args: 
@@ -344,31 +363,40 @@ class display:
             y (int): Y координата  
             radius (int): радиус круга
         """ 
-        if radius < 0:
-            return
-
         rows = len(self.display)
         cols = len(self.display[0]) if rows > 0 else 0
-        xcolibrate = radius + round( cx/100 * 35 )
+        aspect = 2.0  # char_height / char_width
 
-        def plot(x, y):
-            if 0 <= y < rows and 0 <= x < cols:
-                self.display[y][x] = symbol
+        def plot(px, py):
+            if 0 <= py < rows and 0 <= px < cols:
+                self.display[py][px] = symbol
+                self.display[py][px + full] = symbol
+
+        def plot_hline_outline(x1, x2, y):
+            if y < 0 or y >= rows: return
+            if x1 > x2: x1, x2 = x2, x1
+            # обрезаем по границам
+            if x2 < 0 or x1 > cols-1: return
+            x1 = max(0, x1); x2 = min(cols-1, x2)
+            plot(x1, y)
+            if x2 != x1:
+                plot(x2, y)
 
         x = 0
         y = radius
         d = 3 - 2 * radius
 
         while x <= y:
-            plot(cx + x, cy + y)
-            plot(cx - x, cy + y)
-            plot(cx + x, cy - y)
-            plot(cx - x, cy - y)
-            
-            plot(cx + y, cy + x)
-            plot(cx - y, cy + x)
-            plot(cx + y, cy - x)
-            plot(cx - y, cy - x)
+            ax = round(x * aspect)
+            ay = y
+            ay_inv = -y
+            ax_y = round(y * aspect)
+
+            plot_hline_outline(cx - ax, cx + ax, cy + ay)
+            plot_hline_outline(cx - ax, cx + ax, cy - ay)
+
+            plot_hline_outline(cx - ax_y, cx + ax_y, cy + x)
+            plot_hline_outline(cx - ax_y, cx + ax_y, cy - x)
 
             if d <= 0:
                 d = d + 4 * x + 6
@@ -408,7 +436,7 @@ class display:
         print(strings, end=end)
         
         
-def write_to_log_file(file, t ,path_save_log):
+def write_to_log_file(file, t, path_save_log):
     if path_save_log:
         path=os.path.join(path_save_log, file)
     else:
