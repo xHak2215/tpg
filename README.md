@@ -104,6 +104,8 @@ print('text')
   
 подходят как для заднего фона так и для цвета текста
 
+---
+
 ## класс display:
 
 > класс для рисования синволоми в консоли 
@@ -153,12 +155,37 @@ displu.echo(end='\n')
 ```python
 import tpg
 
-displu=tpg.display()
+disply=tpg.display()
 
-displu.line((2,2), (32,5))
+disply.line((2,2), (32,5))
 
-displu.echo()
+disply.echo()
 ```
+
+**круги:**
+
+```python
+import tpg 
+
+disply=tpg.display()
+
+disply.circle(5, 5, 3)
+
+disply.echo()
+```
+
+аргументы:
+`cx` - x координата середины круга 
+
+`cy` - y координата середины круга 
+
+`radius` - радиус круга
+
+`symbol` - синвол круга 
+
+`full` - толщина круга 
+
+---
 
 ## класс logse 
 
@@ -175,6 +202,7 @@ log.warning("test warning")
 
 log.error("test error")
 ```
+
 info - 1 уровень логирования 
 
 warning -2 уровень логирования 
