@@ -383,7 +383,7 @@ class display:
             plot(x1, y)
             if x2 != x1:
                 plot(x2, y)
-
+        
         x = 0
         y = radius
         d = 3 - 2 * radius
@@ -406,7 +406,8 @@ class display:
                 d = d + 4 * (x - y) + 10
                 y -= 1
             x += 1
-
+            
+        
     def clear_display(self):
         """### clear display"""
         
@@ -460,6 +461,8 @@ class display:
                 strings=strings+i[st]
             strings+='\n'
         print(strings, end=end)
+        
+        return strings
         
         
 def write_to_log_file(file, t, path_save_log):
