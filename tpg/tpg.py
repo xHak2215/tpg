@@ -420,6 +420,30 @@ class display:
             templist.append(temp)
         self.display=templist
     
+    def trigon(self, x:int, y:int, h:int, w:int, symbol='█'):
+        """рисует треугольник
+
+        Args:
+            x (int): X координата
+            y (int): Y координата
+            h (int): высота
+            w (int): ширена
+            symbol (str, optional): синвол треугольника. Defaults to '█'.
+        """
+        
+        higft=0
+        wight=0
+        
+        while h>=higft:
+            self.display[y+higft][x+wight] = symbol
+            self.display[y+higft][x-wight] = symbol
+            if wight<=w:
+                wight+=1
+            higft+=1
+
+        for line in range(x-wight+1, x+wight-1):
+            self.display[y+higft-1][line] = symbol
+        
     def echo(self, end='\r') -> str:
         """выводит буфер на экран
 

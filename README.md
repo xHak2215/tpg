@@ -190,6 +190,28 @@ disply.echo()
 
 `full` - толщина круга 
 
+**квадрат:**
+
+```python
+import tpg
+
+despley=tpg.display()
+
+despley.trigon(10, 6, 5, 5)
+
+despley.echo()
+```
+
+аргументы:
+
+`x` - X координата вершины 
+
+`y` - Y координата вершины
+
+`h` - высота
+
+`w` - щерена
+
 ---
 
 ## класс logse 
