@@ -8,6 +8,7 @@ from datetime import datetime
 import inspect
 
 from .ansi import  ansi, art
+import console_tool
 
 import keyboard
 import subprocess
@@ -195,11 +196,10 @@ def yes_ro_no(text:str, kastcor='>', yestxt='yes', notxt='no', midst=False, deep
                 otst=terminal_size()[0] // 2
             print(f"{'\n'*deep}{' '*otst}{text}\n{' '*otst}{yes}{yestxt} {no}{notxt}")
             
-        event = keyboard.read_event()    
-
-def cursor(x:int,y:int,display='█',fone=' ')->str:
-    print(('\n'*y)+(fone*x+display))
-    
+        event = keyboard.read_event()
+        
+def cursor(X, Y):
+    console_tool.cursor(X, Y)    
     
 '''
 if y > 0:
@@ -356,15 +356,15 @@ class display:
             if e2 <= dx:
                 err += dx
                 y += sy
-    
+    """
     def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0):
-        """### функция рисующая круг
+        '''### функция рисующая круг
 
         Args: 
             x (int): X координата 
             y (int): Y координата  
             radius (int): радиус круга
-        """ 
+        '''
         rows = len(self.display)
         cols = len(self.display[0]) if rows > 0 else 0
         aspect = 2.0  # char_height / char_width
@@ -406,8 +406,10 @@ class display:
                 d = d + 4 * (x - y) + 10
                 y -= 1
             x += 1
-            
-        
+    """        
+    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0):
+        ...
+    
     def clear_display(self):
         """### clear display"""
         
