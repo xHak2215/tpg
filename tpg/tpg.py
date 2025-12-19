@@ -61,8 +61,8 @@ def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', a
         
 def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033[0m')->str:
     cursor=0
-    if os.path.isfile(jsonf):
-            with open(jsonf, "r") as json_settings:
+    if jsonf and os.path.isfile(jsonf):
+            with open(jsonf, 'r') as json_settings:
                 data = json.load(json_settings)
     else:
         raise FileNotFoundError(f'no faile ({jsonf})')
@@ -99,6 +99,8 @@ def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033
                     flag='+'
                 else:       
                     flag='-'
+            else:
+                raise ValueError("no the style, style: zapoln, +")
             print(ansi+cor+punkt+ ' ' * int(20 - len(punkt)) +'['+flag+']')
         if keyboard.is_pressed('enter'):
             if data[list(data.keys())[cursor]]:
@@ -198,7 +200,8 @@ def yes_ro_no(text:str, kastcor='>', yestxt='yes', notxt='no', midst=False, deep
             
         event = keyboard.read_event()
         
-def cursor(X, Y):
+def cursor(X:int, Y:int):
+    """Перемещает курсор в консоли на указанные координаты."""
     console_tool.cursor(X, Y)    
     
 '''

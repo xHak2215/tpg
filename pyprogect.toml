@@ -13,6 +13,7 @@ repository ="https://github.com/xHak2215/tpg"
 [tool.poetry.dependencies]
 python = "^3.12"
 keyboard = {version = "0.13.5", allow-prereleases = true}
+pybind11 = {version = "3.0.1"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"

@@ -9,7 +9,7 @@ def readme():
 ext_modules = [
     Extension(
         "console_tool",
-        ["console_tool.cpp"],
+        ["tpg/console_tool.cpp"],
         include_dirs=[pybind11.get_include()],
         language="c++"
     )
