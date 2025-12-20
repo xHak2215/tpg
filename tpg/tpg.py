@@ -6,12 +6,43 @@ import threading
 import traceback
 from datetime import datetime
 import inspect
+import ctypes
+from ctypes import wintypes
+import re
 
 from .ansi import  ansi, art
 import console_tool
 
 import keyboard
 import subprocess
+
+def console_is_active():
+    if os.name == 'nt':
+        try:
+            GetForegroundWindow = ctypes.windll.user32.GetForegroundWindow
+            GetConsoleWindow = ctypes.windll.kernel32.GetConsoleWindow
+            GetForegroundWindow.restype = wintypes.HWND
+            GetConsoleWindow.restype = wintypes.HWND
+            return GetForegroundWindow() == GetConsoleWindow()
+        except Exception:
+            return False
+        
+    elif os.name == 'posix':
+        try:
+            # PID текущего процесса
+            pid = os.getpid()
+            # получить активное окно (hex или dec)
+            active = subprocess.check_output(["xdotool", "getactivewindow"]).strip().decode()
+            # получить _NET_WM_PID окна
+            out = subprocess.check_output(["xprop", "-id", active, "_NET_WM_PID"]).decode()
+            m = re.search(r"=\s*(\d+)", out)
+            if m and int(m.group(1)) == pid:
+                return True
+        except Exception as e:
+            return True
+        return False
+    else:
+        return True
 
 def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', ansi='\033[0m')->str|None:
     cursor=0
@@ -23,7 +54,7 @@ def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', a
         else:
             key='-'
 
-        if key:
+        if key and console_is_active():
             if os.name == 'nt': 
                 os.system("cls")
             else:
@@ -75,64 +106,77 @@ def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', a
                 return unitperedvogenie
         event = keyboard.read_event()
         
-def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033[0m')->str:
+def settings(data:dict,kastcor='>',title=None,style='zapoln',jsonf=None,ansi='\033[0m')->str|dict:
     cursor=0
     if jsonf and os.path.isfile(jsonf):
             with open(jsonf, 'r') as json_settings:
                 data = json.load(json_settings)
     else:
-        raise FileNotFoundError(f'no faile ({jsonf})')
+        raise FileNotFoundError(f'no file ({jsonf}) in the directories')
+    event=None
     while True:
-        cor=''
-        print(title)
-        if keyboard.is_pressed('esc'):
-            with open(jsonf, "w") as json_settings:
-                json_settings.write(json.dumps(data))
-            while keyboard.is_pressed('esc'):
-                time.sleep(0.1)
-            return data
-        if keyboard.is_pressed('down'):
-            cursor=cursor+1
-            if os.name!='nt':time.sleep(0.1)
-            
-        if keyboard.is_pressed('up'):
-            cursor=cursor-1
-            if os.name!='nt':time.sleep(0.1)
-
-        if cursor<0:
-            cursor=0
-        if cursor>len(list(data.keys()))-1:
-            cursor=len(list(data.keys()))-1
-        for i in range(len(list(data.keys()))):
-            punkt=list(data.keys())[i]
-            if cursor==i:
-                cor=kastcor
-            else:
-                cor=' '
-            if style == 'zapoln':
-                if bool(data[punkt]):
-                    flag='█'
-                else:
-                    flag='░'
-            elif style == '+':
-                if bool(data[punkt]):
-                    flag='+'
-                else:       
-                    flag='-'
-            else:
-                raise ValueError("no the style, style: zapoln, +")
-            print(f"{ansi}{cor}{punkt} {' ' * int(20 - len(punkt))} {'['+flag+']'}")
-        if keyboard.is_pressed('enter'):
-            if data[list(data.keys())[cursor]]:
-                data[list(data.keys())[cursor]]=False
-            else:
-                data[list(data.keys())[cursor]]=True
-            while keyboard.is_pressed('enter'):
-                time.sleep(0.1)
-        if os.name == 'nt': 
-            os.system("cls")
+        if event:
+            key = event.name
         else:
-            os.system("clear")
+            key='-'
+        if key and console_is_active():
+            if os.name == 'nt': 
+                os.system("cls")
+            else:
+                os.system("clear")
+
+            cor=''
+            if title:
+                print(title)
+            if keyboard.is_pressed('esc'):
+                with open(jsonf, "w") as json_settings:
+                    json_settings.write(json.dumps(data))
+                while keyboard.is_pressed('esc'):
+                    time.sleep(0.1)
+                return data
+            if keyboard.is_pressed('down'):
+                cursor=cursor+1
+                if os.name!='nt':time.sleep(0.1)
+                
+            if keyboard.is_pressed('up'):
+                cursor=cursor-1
+                if os.name!='nt':time.sleep(0.1)
+
+            if cursor<0:
+                cursor=0
+            if cursor>len(list(data.keys()))-1:
+                cursor=len(list(data.keys()))-1
+            for i in range(len(list(data.keys()))):
+                punkt=list(data.keys())[i]
+                if cursor==i:
+                    cor=kastcor
+                else:
+                    cor=' '
+                if style == 'zapoln':
+                    if bool(data[punkt]):
+                        flag='█'
+                    else:
+                        flag='░'
+                elif style == '+':
+                    if bool(data[punkt]):
+                        flag='+'
+                    else:       
+                        flag='-'
+                else:
+                    raise ValueError("no the style, style: zapoln, +")
+                print(f"{ansi}{cor}{punkt} {' ' * int(20 - len(punkt))} {'['+flag+']'}")
+            if keyboard.is_pressed('enter'):
+                if data[list(data.keys())[cursor]]:
+                    data[list(data.keys())[cursor]]=False
+                else:
+                    data[list(data.keys())[cursor]]=True
+                while keyboard.is_pressed('enter'):
+                    time.sleep(0.1)
+                key=True
+                event=None
+                continue
+
+        event = keyboard.read_event()
         
 def terminal_size() ->tuple:
     """
@@ -143,17 +187,6 @@ def terminal_size() ->tuple:
     """
     # X , Y 
     return (int(os.get_terminal_size().columns) , int(os.get_terminal_size().lines))
-
-def is_terminal_focused():
-    if os.name == 'nt': 
-        return True
-    else:
-        try:
-            active = subprocess.check_output(["xdotool", "getwindowfocus", "getwindowpid"])
-            return int(active.strip()) == os.getpid()
-        except Exception as e:
-            return True
-
 
 def color(text,color,stule='standart',begraund='blak',end='\33[0m')->str:#text,color,stule,beggraubd
     r"""позволяет перекрашивать цвет работает на `ansi`
@@ -195,7 +228,7 @@ def yes_ro_no(text:str, kastcor='>', yestxt='yes', notxt='no', midst=False, deep
             key = event.name
         else:
             key='-'
-        if key:
+        if key and console_is_active():
             if os.name == 'nt': 
                 os.system("cls")
             else:

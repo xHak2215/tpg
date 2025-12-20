@@ -1,6 +1,1 @@
-{
-    "setting1":true,
-    "setting2":true,
-    "setting3":false
-
-}
+{"setting1": true, "setting2": false, "setting3": false}
