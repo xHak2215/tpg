@@ -13,51 +13,67 @@ import console_tool
 import keyboard
 import subprocess
 
-def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', ansi='\033[0m')->str:
+def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', ansi='\033[0m')->str|None:
     cursor=0
+    event=None
+    cor=''
     while True:
-        cor=''
-        print(title)
-        if keyboard.is_pressed('esc'):
-            return None
-        if keyboard.is_pressed('down'):
-            cursor=cursor+1
-        if keyboard.is_pressed('up'):
-            cursor=cursor-1
-        if cursor<0:
-            cursor=0
-        if cursor>len(unitperedvogenielist)-1:
-            cursor=len(unitperedvogenielist)-1
-        for i in range(len(unitperedvogenielist)):
-            if style =='standart':
-                if cursor==i:
-                    cor=kastcor
-                else:
-                    cor=' '
-                print(ansi+cor+str(unitperedvogenielist[i]))
-            elif style=='scob':
-                if cursor==i:
-                    cor='+'
-                else:
-                    cor=''
-                prob=' '*(max(0,15-len(str(unitperedvogenielist[i]))))
-                print(ansi+f'{str(unitperedvogenielist[i])}{prob}({cor})')
-            else:
-                raise SyntaxError('no style'+style)
-            #if type(unitperedvogenielist[i])=="dict":
-            #    for a in unitperedvogenielist[i].keys():
-            #        print('  '+cor+a+'ᐁ')
-            #        for s in a:
-            #            print(s)
-        if keyboard.is_pressed('enter'):
-            unitperedvogenie=unitperedvogenielist[cursor]
-            while keyboard.is_pressed('enter'):
-                time.sleep(0.1)
-            return unitperedvogenie
-        if os.name == 'nt': 
-            os.system("cls")
+        if event:
+            key = event.name
         else:
-            os.system("clear")
+            key='-'
+
+        if key:
+            if os.name == 'nt': 
+                os.system("cls")
+            else:
+                os.system("clear")
+
+            print(title)
+            if keyboard.is_pressed('esc'):
+                return None
+            
+            if keyboard.is_pressed('down'):
+                cursor=cursor+1
+                if os.name != 'nt':time.sleep(0.1) 
+
+            if keyboard.is_pressed('up'):
+                cursor=cursor-1
+                if os.name != 'nt':time.sleep(0.1)
+
+            if cursor<0:
+                cursor=0
+            if cursor>len(unitperedvogenielist)-1:
+                cursor=len(unitperedvogenielist)-1
+            for i in range(len(unitperedvogenielist)):
+                if style =='standart':
+                    if cursor==i:
+                        cor=kastcor
+                    else:
+                        cor=' '
+                    print(f"{ansi}{cor}{str(unitperedvogenielist[i])}")
+
+                elif style=='scob':
+                    if cursor==i:
+                        cor='+'
+                    else:
+                        cor=''
+                    prob=' '*(max(0,15-len(str(unitperedvogenielist[i]))))
+
+                    print(f"{ansi}{str(unitperedvogenielist[i])}{prob}({cor})")
+                else:
+                    raise SyntaxError('no style'+style)
+                #if type(unitperedvogenielist[i])=="dict":
+                #    for a in unitperedvogenielist[i].keys():
+                #        print('  '+cor+a+'ᐁ')
+                #        for s in a:
+                #            print(s)
+            if keyboard.is_pressed('enter'):
+                unitperedvogenie=unitperedvogenielist[cursor]
+                while keyboard.is_pressed('enter'):
+                    time.sleep(0.1)
+                return unitperedvogenie
+        event = keyboard.read_event()
         
 def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033[0m')->str:
     cursor=0
@@ -77,8 +93,12 @@ def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033
             return data
         if keyboard.is_pressed('down'):
             cursor=cursor+1
+            if os.name!='nt':time.sleep(0.1)
+            
         if keyboard.is_pressed('up'):
             cursor=cursor-1
+            if os.name!='nt':time.sleep(0.1)
+
         if cursor<0:
             cursor=0
         if cursor>len(list(data.keys()))-1:
@@ -101,7 +121,7 @@ def settings(data:dict,kastcor='>',title='',style='zapoln',jsonf=None,ansi='\033
                     flag='-'
             else:
                 raise ValueError("no the style, style: zapoln, +")
-            print(ansi+cor+punkt+ ' ' * int(20 - len(punkt)) +'['+flag+']')
+            print(f"{ansi}{cor}{punkt} {' ' * int(20 - len(punkt))} {'['+flag+']'}")
         if keyboard.is_pressed('enter'):
             if data[list(data.keys())[cursor]]:
                 data[list(data.keys())[cursor]]=False

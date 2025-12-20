@@ -4,6 +4,6 @@ list=[1,2,'test','123',]
 
 #kastcor='>' cursor
 
-out=listgr(list,kastcor='>',title='title list',style='scob',ansi=color('green'))
+out=listgr(list,kastcor='>',title='title list',style='scob',ansi=color('','green',end=''))
 
 print(out) # print Selected point
