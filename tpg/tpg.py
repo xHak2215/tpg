@@ -15,8 +15,10 @@ import console_tool
 
 import keyboard
 import subprocess
+import psutil
 
 def console_is_active():
+    """определяет активно ли окно, совместимо с X11 оболочкой и Windows"""
     if os.name == 'nt':
         try:
             GetForegroundWindow = ctypes.windll.user32.GetForegroundWindow
@@ -29,15 +31,14 @@ def console_is_active():
         
     elif os.name == 'posix':
         try:
-            # PID текущего процесса
-            pid = os.getpid()
-            # получить активное окно (hex или dec)
             active = subprocess.check_output(["xdotool", "getactivewindow"]).strip().decode()
             # получить _NET_WM_PID окна
             out = subprocess.check_output(["xprop", "-id", active, "_NET_WM_PID"]).decode()
             m = re.search(r"=\s*(\d+)", out)
-            if m and int(m.group(1)) == pid:
-                return True
+            p = psutil.Process(os.getpid())
+            for anc in p.parents():
+                if m and anc.pid == int(m.group(1)):
+                    return True
         except Exception as e:
             return True
         return False

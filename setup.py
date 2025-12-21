@@ -26,7 +26,7 @@ setup(
   long_description_content_type='text/markdown',
   url='https://github.com/xHak2215/tpg',
   packages=find_packages(),
-  install_requires=['keyboard>=2.25.1'],
+  install_requires=['keyboard>=2.25.1','psutil==7.1.3','subprocess'],
   classifiers=[
     'Programming Language :: Python :: 3.11',
     'License :: MIT License',
