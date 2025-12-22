@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <iostream>
 
+using namespace std;
+
 namespace py = pybind11;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -39,4 +41,3 @@ PYBIND11_MODULE(console_tool, m) {
     m.doc() = "Cross-platform console cursor control";
     m.def("cursor", &cursor, "Перемещает курсор в консоли на указанные координаты. Возвращает 0 при успехе.");
 }
-

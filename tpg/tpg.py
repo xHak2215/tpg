@@ -45,7 +45,7 @@ def console_is_active():
     else:
         return True
 
-def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', ansi='\033[0m')->str|None:
+def listgr(unitperedvogenielist:list, kastcor='>', title=None, style='standart', ansi='\033[0m')->str|None:
     cursor=0
     event=None
     cor=''
@@ -61,7 +61,9 @@ def listgr(unitperedvogenielist:list, kastcor='>', title='', style='standart', a
             else:
                 os.system("clear")
 
-            print(title)
+            if title:
+                print(title)
+
             if keyboard.is_pressed('esc'):
                 return None
             
@@ -295,39 +297,49 @@ def frame(text:str, x=-1, y=-1)->str:
 class InputMany:
     def __init__(self):
         self.output = []
-        self.lock = threading.Lock()  # Для безопасного доступа к output
-    
-    def input_at(self, x: int, y: int, prompt: str): 
-        """Создает поле ввода в указанных координатах"""
-        # Перемещаем курсор и выводим приглашение
+        self.inputs_list = []
+        self.input_in = 0
+        self.lock = threading.Lock()
+
+    def input_at(self, x: int, y: int, prompt: str):
+        """Отобразить приглашение в позиции (x,y)."""
+        self.inputs_list.append((x, y, prompt))
+
+    def _reader(self, x: int, y: int, prompt: str, index:int):
+        """
+        Читает ввод и сохраняет в self.output в позиции index.
+        index нужен, чтобы сохранить порядок ответов соответствующим переданным координатам.
+        """
+        cursor(x + len(prompt), y)
+        user_input = sys.stdin.readline()
         with self.lock:
-            sys.stdout.write(f"\033[{y};{x}H{prompt}")
-            input_pos = x + len(prompt)
-            sys.stdout.write(f"\033[{y};{input_pos}H")
+            self.output.append(user_input)
+
+    def run_inputs(self) -> list:
+        """
+        coordinates: последовательность кортежей (x, y, prompt)
+        Возвращает список ответов в том же порядке, в котором заданы coordinates.
+        """
+        threads = []
+
+        # Сначала отрисуем все промпты
+        for (x, y, prompt) in self.inputs_list:
+            cursor(x, y)
+            sys.stdout.write(prompt)
             sys.stdout.flush()
         
-        # Читаем ввод
-        user_input = sys.stdin.readline()
-        
-        # Сохраняем результат
-        with self.lock:
-            self.output.append(user_input.strip())
-    
-    def gather_inputs(self, *coordinates):
-        """### Запускает несколько полей ввода одновременно"""
-        threads = []
-        
-        for x, y, prompt in coordinates:
-            # Создаем поток для каждого поля ввода
-            t = threading.Thread(target=self.input_at, args=(x, y, prompt))
+        ix=0
+        for i, (x, y, prompt) in enumerate(self.inputs_list):
+            t = threading.Thread(target=self._reader, args=(x, y, prompt, ix))
             t.daemon = True
             threads.append(t)
             t.start()
-        
-        # Ждем завершения всех потоков
-        for t in threads:
             t.join()
-        
+            ix+=1
+
+        #for t in threads:
+        #    t.join()
+
         return self.output
 
 class display:
