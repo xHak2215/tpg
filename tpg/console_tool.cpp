@@ -37,7 +37,13 @@ int cursor(int X, int Y) {
     return moveCursor(X, Y);
 }
 
+int print(string text, string end ) {
+    std::cout << text << end;
+    return 0;
+}
+
 PYBIND11_MODULE(console_tool, m) {
     m.doc() = "Cross-platform console cursor control";
     m.def("cursor", &cursor, "Перемещает курсор в консоли на указанные координаты. Возвращает 0 при успехе.");
+    m.def("print", &print);
 }

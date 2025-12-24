@@ -191,7 +191,7 @@ def terminal_size() ->tuple:
     # X , Y 
     return (int(os.get_terminal_size().columns) , int(os.get_terminal_size().lines))
 
-def color(text,color,stule='standart',begraund='blak',end='\33[0m')->str:#text,color,stule,beggraubd
+def color(text, color, style='standart', begraund='blak', end='\33[0m')->str:#text,color,stule,beggraubd
     r"""позволяет перекрашивать цвет работает на `ansi`
 
     Args:
@@ -207,13 +207,13 @@ def color(text,color,stule='standart',begraund='blak',end='\33[0m')->str:#text,c
     
     self=ansi()
     try:
-        stule=self.stule[stule]
+        stule=self.style[style]
     except KeyError:
-        raise KeyError(f'error Not correct parameters , parameters :{self.stule.keys()} ')
+        raise KeyError(f'error Not correct parameters , parameters :{self.style.keys()} ')
     try:
         color=self.color[color]
     except KeyError:
-        raise KeyError(f'error Not correct parameters , parameters :{self.color.keys()} ')
+        raise KeyError(f'error Not correct parameters , parameters :{self.style.keys()} ')
     try:
         begraund=self.beggraubd[begraund]
     except KeyError:
@@ -353,7 +353,7 @@ class display:
             templist.append(temp)
         self.display=templist
         
-    def box(self,px:int, py:int, x:int, y:int, symbol='█', filling=False):
+    def box(self,px:int, py:int, x:int, y:int, symbol='█', filling=False, color=("\33[0m","\33[0m")):
         """### create box
 
         Args:
@@ -362,7 +362,8 @@ class display:
             x (int): X Corridate
             y (int): Y Corridate
             symbol (str, optional): symbol box. Defaults to '█'.
-            filling (bool): заполнен ли квадрат
+            filling (bool): заполнен ли квадрат.
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после синвола).
         """
         
         if y>len(self.display)+py:
@@ -371,33 +372,38 @@ class display:
             raise TypeError(f"X goes beyond (max {len(self.display[0])})")
         
         for xpos in range(x, x+px):
-            self.display[y][xpos] = symbol
+            self.display[y][xpos] = color[0] + symbol + color[1]
             
         if filling:
             for y in range(y,y+py):
                 for xe in range(x,x+px):
-                    self.display[y][xe] = symbol
+                    self.display[y][xe] = color[0] + symbol + color[1]
         else:
             for y in range(y,y+py):
-                self.display[y][x] = symbol
-                self.display[y][x+px] = symbol   
+                self.display[y][x] = color[0] + symbol + color[1]
+                self.display[y][x+px] = color[0] + symbol + color[1]
                  
         for xpos in range(x,x+px):
-            self.display[y][xpos] = symbol
+            self.display[y][xpos] = color[0] + symbol + color[1]
             
-    def cursor(self ,x : int, y : int, symbol='█'):
+    def cursor(self ,x : int, y : int, symbol='█', color=("\33[0m","\33[0m")):
         try:
             self.display[y]
         except KeyError:
             raise KeyError(f'no the lines end lines {len(self.display)}')
         try:
-            self.display[y][x] = symbol
+            self.display[y][x] = color[0] + symbol + color[1]
         except KeyError:
             raise KeyError(f'There is no such symbol')
     
-    def line(self, point1:tuple, point2:tuple, symbol='█'):
+    def line(self, point1:tuple[int,int], point2:tuple[int,int], symbol='█', color:tuple=("\33[0m","\33[0m")):
         """
         Рисует линию между point1 и point2.
+        Args:
+            point1 (tuple): координаты 1 точки формат: `(X, Y)`
+            point2 (tuple): координаты 2 точки формат: `(X, Y)`
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после синвола).
+            symbol (str): синвол из которого сотоит линия.
         """
         x0, y0 = point1
         
@@ -415,7 +421,7 @@ class display:
         x, y = x0, y0
         while True:
             # проверяем, что строка существует (по Y) - уже гарантировано; по X используем запись в словарь
-            self.display[y][x] = symbol
+            self.display[y][x] = color[0] + symbol + color[1]
             if x == x1 and y == y1:
                 break
             e2 = 2 * err
@@ -476,7 +482,7 @@ class display:
                 y -= 1
             x += 1
     """        
-    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0):
+    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0, color=("\33[0m","\33[0m")):
         ...
     
     def clear_display(self):
@@ -492,7 +498,7 @@ class display:
             templist.append(temp)
         self.display=templist
     
-    def trigon(self, x:int, y:int, h:int, w:int, symbol='█'):
+    def trigon(self, x:int, y:int, h:int, w:int, symbol='█', filling:bool=False, color=("\33[0m","\33[0m")):
         """рисует треугольник
 
         Args:
@@ -500,27 +506,32 @@ class display:
             y (int): Y координата
             h (int): высота
             w (int): ширена
-            symbol (str, optional): синвол треугольника. Defaults to '█'.
+            symbol (str, optional): синвол из кторого будет состоять фигура. Defaults to '█'.
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после синвола).
         """
         
         higft=0
         wight=0
-        
+
         while h>=higft:
-            self.display[y+higft][x+wight] = symbol
-            self.display[y+higft][x-wight] = symbol
+            if filling:
+                self.line((x+wight, y+higft),(x-wight, y+higft), color=color)
+            else:
+                self.display[y+higft][x+wight] =color[0] + symbol + color[1]
+                self.display[y+higft][x-wight] =color[0] + symbol + color[1]
             if wight<=w:
                 wight+=1
             higft+=1
 
         for line in range(x-wight+1, x+wight-1):
-            self.display[y+higft-1][line] = symbol
+            self.display[y+higft-1][line] = color[0] + symbol + color[1]
         
-    def echo(self, end='\r') -> str:
+    def echo(self, end='\r', print_std:bool=True) -> str:
         """выводит буфер на экран
 
         Args:
             end (str, optional): аргумент end. Defaults to '\r'.
+            print_std (bool): вудет ли вывод содержимого буфера в терминал. Defaults to `True`. 
 
         Returns:
             str: содержимое буфера
@@ -531,7 +542,8 @@ class display:
             for st in list(dict(i).keys()):
                 strings=strings+i[st]
             strings+='\n'
-        print(strings, end=end)
+        if print_std:
+            print(strings, end=end)
         
         return strings
         

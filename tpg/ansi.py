@@ -83,7 +83,7 @@ class ansi:
         '\x90':"numlock"
         }
         
-        self.stule={
+        self.style={
             'standart':0,
             'big':1,
             'tone':2,
