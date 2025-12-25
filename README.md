@@ -31,6 +31,8 @@ out_point=listgr(['point1','point2','point3'])
 print(out_point)
 ```
 
+![hippo](doc/list_test.gif)
+
 аргументы:
 `kastor` - параметре отвечающий за курсор стоящий перед выбранным пунктом (по умолчанию '>')
 
@@ -41,10 +43,7 @@ print(out_point)
 управление: перемещение курсора в верх в низ стрелки,изменение - enter,заверщение - esc
 
 `ansi` - возможность использовать ANSI escape sequences в меню достаточно лишь передать ANSI последовательность советую использовать функцию `color` описанную ниже
-
-как это выгледит
-
-![hippo](doc/list_test.gif)
+
 
 ### settings:
 
@@ -77,13 +76,13 @@ if yes_or_no('yes or no'): # yes - True no -false
 else:
     print('press no')  
 ```
+![hippo](doc/yes_or_no.gif)
+
 аргументы:
 - `text` - заголовок над интерактиынфми элементами 
 - `kastcor` - курсор стоящий перед выброным элементом 
 - `yestxt` - текст 1 элемента (yes по умолчанию)
 - `notxt` - текст 2 элемента (no по умолчанию)
-
-![hippo](doc/yes_or_no.gif)
 
 ### color:
 
@@ -121,6 +120,8 @@ print('text')
 - box
 - clear_display
 - line
+- triangle 
+- circle
 
 примеры:
 
@@ -208,9 +209,11 @@ despley.echo()
 
 `y` - Y координата вершины
 
-`h` - высота
+`h` - высота квадрата 
 
-`w` - щерена
+`w` - ширина квадрата (его основания)
+
+`filling` - заполнен ли квадрат 
 
 ---
 
@@ -230,7 +233,7 @@ log.warning("test warning")
 log.error("test error")
 ```
 
-info - 1 уровень логирования 
+info -1 уровень логирования 
 
 warning -2 уровень логирования 
 
