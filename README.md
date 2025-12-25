@@ -127,33 +127,34 @@ print('text')
 
 **вывод текста по кординатам:**
 
+**квадраты и прямоугольники:**
 ```python
 import tpg
 
-displu=tpg.display()
+disply=tpg.display()
 
-displu.cursor(5,5)
+disply.box(5, 5, 2, 2)
 
-displu.echo()
+disply.echo()
 
 ```
 
-**вывод 2 прямоугольников (квадратов с задаными свойствами) где в одном находиться текст а другой залит**
+параметры:
+- `px` - ширина фигуры
+- `py` - высота фигуры
+- `x` - X координата 
+
 
 ```python
 import tpg
 
-displu=tpg.display()
+disply=tpg.display()
 
-displu.box(15, 11, 1, 1,blok='@')
+disply.cursor(5,5)
 
-displu.box(15, 11, 22, 1, filling=True)
+disply.echo()
 
-displu.cursor(3,3 ,symbol='hi')
-
-displu.echo(end='\n')
-
-```
+```
 
 **рисовка линий:**
 
@@ -214,6 +215,26 @@ despley.echo()
 `w` - ширина квадрата (его основания)
 
 `filling` - заполнен ли квадрат 
+
+
+**примеры программ:**
+
+**вывод 2 прямоугольников (квадратов с задаными свойствами) где в одном находиться текст а другой залит**
+
+```python
+import tpg
+
+displu=tpg.display()
+
+displu.box(15, 11, 1, 1,blok='@')
+
+displu.box(15, 11, 22, 1, filling=True)
+
+displu.cursor(3,3 ,symbol='hi')
+
+displu.echo(end='\n')
+
+```
 
 ---
 
