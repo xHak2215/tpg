@@ -431,23 +431,26 @@ class display:
             if e2 <= dx:
                 err += dx
                 y += sy
-    """
-    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0):
-        '''### функция рисующая круг
+
+    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0, color:tuple=("\33[0m","\33[0m")):
+        '''### функция рисующая круг (**работает криво!**)
 
         Args: 
             x (int): X координата 
             y (int): Y координата  
             radius (int): радиус круга
+            symbol (str): синвол из которого сотоит круг.
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после синвола).
         '''
         rows = len(self.display)
         cols = len(self.display[0]) if rows > 0 else 0
         aspect = 2.0  # char_height / char_width
 
+        # это какой то лютый гавнокод
         def plot(px, py):
             if 0 <= py < rows and 0 <= px < cols:
-                self.display[py][px] = symbol
-                self.display[py][px + full] = symbol
+                self.display[py][px] = color[0] + symbol + color[1]
+                self.display[py][px + full] = color[0] + symbol + color[1]
 
         def plot_hline_outline(x1, x2, y):
             if y < 0 or y >= rows: return
@@ -464,16 +467,16 @@ class display:
         d = 3 - 2 * radius
 
         while x <= y:
-            ax = round(x * aspect)
-            ay = y
-            ay_inv = -y
-            ax_y = round(y * aspect)
 
-            plot_hline_outline(cx - ax, cx + ax, cy + ay)
-            plot_hline_outline(cx - ax, cx + ax, cy - ay)
+            #ax = round(x * aspect)
+            #ay = y
+            #ax_y = round(y * aspect)
 
-            plot_hline_outline(cx - ax_y, cx + ax_y, cy + x)
-            plot_hline_outline(cx - ax_y, cx + ax_y, cy - x)
+            plot(cx, cx)
+            plot(cx, cx)
+
+            plot(cx, cx)
+            plot(cx, cx)
 
             if d <= 0:
                 d = d + 4 * x + 6
@@ -481,9 +484,6 @@ class display:
                 d = d + 4 * (x - y) + 10
                 y -= 1
             x += 1
-    """        
-    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0, color=("\33[0m","\33[0m")):
-        ...
     
     def clear_display(self):
         """### clear display"""
