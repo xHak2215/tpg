@@ -9,6 +9,7 @@ import inspect
 import ctypes
 from ctypes import wintypes
 import re
+import math
 
 from .ansi import  ansi, art
 import console_tool
@@ -433,7 +434,7 @@ class display:
                 y += sy
 
     def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0, color:tuple=("\33[0m","\33[0m")):
-        '''### функция рисующая круг (**работает криво!**)
+        '''### функция рисующая круг (**не работает !**)
 
         Args: 
             x (int): X координата 
@@ -442,49 +443,73 @@ class display:
             symbol (str): синвол из которого сотоит круг.
             color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после синвола).
         '''
+
         rows = len(self.display)
         cols = len(self.display[0]) if rows > 0 else 0
         aspect = 2.0  # char_height / char_width
 
-        # это какой то лютый гавнокод
         def plot(px, py):
             if 0 <= py < rows and 0 <= px < cols:
                 self.display[py][px] = color[0] + symbol + color[1]
-                self.display[py][px + full] = color[0] + symbol + color[1]
+                if full and px + 1 < cols:
+                    self.display[py][px + 1] = color[0] + symbol + color[1]
+        y_st = 0
+        x_st = 0
+        z_x_1 = 0
+        z_y_1 = 0
+        z_x_2 = 0
+        z_y_2 = 0
+        un_rad = max(1, round(radius / math.pi))
+        x_un_rad = round(un_rad * aspect)
 
-        def plot_hline_outline(x1, x2, y):
-            if y < 0 or y >= rows: return
-            if x1 > x2: x1, x2 = x2, x1
-            # обрезаем по границам
-            if x2 < 0 or x1 > cols-1: return
-            x1 = max(0, x1); x2 = min(cols-1, x2)
-            plot(x1, y)
-            if x2 != x1:
-                plot(x2, y)
-        
-        x = 0
-        y = radius
-        d = 3 - 2 * radius
+        trig_1 = False
+        trig_2 = False
 
-        while x <= y:
+        # цикл: повторяем пока не закончены все этапы
+        while y_st != un_rad or x_st != x_un_rad or y_st + 1 != z_y_1 or y_st + 1 != z_y_2:
+            # вертикальные полосы
+            if y_st != un_rad:
+                plot(cx - radius, cy + y_st)
+                plot(cx - radius, cy - y_st)
+                plot(cx + radius, cy + y_st)
+                plot(cx + radius, cy - y_st)
+                y_st += 1
+            elif y_st == un_rad:
+                p_x1 = cx - radius
+                p_y1 = cy + y_st
+                p_x2 = cx + radius
+                p_y2 = cy - y_st
+                trig_1 = True
 
-            #ax = round(x * aspect)
-            #ay = y
-            #ax_y = round(y * aspect)
+            # горизонтальные полосы
+            if x_st != x_un_rad:
+                plot(cx + x_st, cy - x_un_rad)
+                plot(cx - x_st, cy - x_un_rad)
+                plot(cx - x_st, cy + x_un_rad)
+                plot(cx + x_st, cy + x_un_rad)
+                x_st += 1
+            elif x_st == x_un_rad:
+                p_x3 = cx + x_st
+                p_y3 = cy - x_un_rad
+                p_x4 = cx + x_st
+                p_y4 = cy + x_un_rad
+                trig_2 = True
 
-            plot(cx, cx)
-            plot(cx, cx)
+            # соединяем углы
+            if y_st >= un_rad and x_st >= x_un_rad and trig_2 and trig_1:
+                # увеличиваем смещения по диагонали
+                z_x_1 += 1
+                z_y_2 += 1
 
-            plot(cx, cx)
-            plot(cx, cx)
+                plot(p_x1 + z_x_1, p_y1 - z_y_1)  # верхний правый от p_x1,p_y1
+                plot(p_x2 - z_x_1, p_y2 + z_y_1)  # нижний левый от p_x2,p_y2
 
-            if d <= 0:
-                d = d + 4 * x + 6
-            else:
-                d = d + 4 * (x - y) + 10
-                y -= 1
-            x += 1
-    
+                plot(p_x3 - z_x_2, p_y3 + z_y_2)  # нижний левый от p_x3,p_y3
+                plot(p_x4 + z_x_2, p_y4 - z_y_2)  # верхний правый от p_x4,p_y4
+
+                z_y_1 += 1
+                z_x_2 += 1
+
     def clear_display(self):
         """### clear display"""
         
