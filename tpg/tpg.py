@@ -432,6 +432,63 @@ class display:
             if e2 <= dx:
                 err += dx
                 y += sy
+    
+    def multi_line(self, points:list[tuple], symbol='█', color:tuple=("\33[0m","\33[0m")):
+        """
+        соеденяет точки указанные в списке
+
+        Args:
+            points(list): список соеденяемых точек где кажный элемент это кортеж с координатой X и Y
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после синвола).
+            symbol (str): синвол из которого сотоит линия.
+        """
+        def line(x1,y1, x2,y2):
+            step = abs(x1-x2)<abs(y1-y2)
+
+            if step:
+                x1,y1 = y1,x1
+                x2,y2 = y2,x2
+                
+            if x1>x2:
+                x1,x2 = x2,x1
+                y1,y2 = y2,y1
+
+            x=x1
+            while x<=x2:
+                t = (x-x1) / float(x2-x1)
+                y = round( y1 + (y2-y1)*t)
+                if step:
+                    self.cursor(y, x, symbol=symbol, color=color)
+                else:
+                    self.cursor(x, y, symbol=symbol, color=color)
+                x+=1
+
+        for pt in range(0,len(points)):
+
+            if pt % 2 == 0:
+                x2=points[pt][0]
+                y2=points[pt][1]
+            else:
+                x1=points[pt][0]
+                y1=points[pt][1]
+            
+            if pt == 0:
+                x1, y1 = points[0][0], points[0][1]
+                x2, y2 = points[1][0], points[1][1]
+
+            if pt == len(points):
+                if len(points) >=3:
+                    x2, y2 = points[0][0], points[0][1]
+                else:
+                    return
+                
+            if x1+y1 == x2+y2:
+                continue
+            
+            print(x1, y1, x2, y2)
+            line(x1, y1, x2, y2)
+        
+
 
     def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0, color:tuple=("\33[0m","\33[0m")):
         '''### функция рисующая круг (**не работает !**)
@@ -465,7 +522,6 @@ class display:
         trig_1 = False
         trig_2 = False
 
-        # цикл: повторяем пока не закончены все этапы
         while y_st != un_rad or x_st != x_un_rad or y_st + 1 != z_y_1 or y_st + 1 != z_y_2:
             # вертикальные полосы
             if y_st != un_rad:
@@ -497,18 +553,11 @@ class display:
 
             # соединяем углы
             if y_st >= un_rad and x_st >= x_un_rad and trig_2 and trig_1:
-                # увеличиваем смещения по диагонали
-                z_x_1 += 1
-                z_y_2 += 1
-
                 plot(p_x1 + z_x_1, p_y1 - z_y_1)  # верхний правый от p_x1,p_y1
                 plot(p_x2 - z_x_1, p_y2 + z_y_1)  # нижний левый от p_x2,p_y2
 
                 plot(p_x3 - z_x_2, p_y3 + z_y_2)  # нижний левый от p_x3,p_y3
                 plot(p_x4 + z_x_2, p_y4 - z_y_2)  # верхний правый от p_x4,p_y4
-
-                z_y_1 += 1
-                z_x_2 += 1
 
     def clear_display(self):
         """### clear display"""
