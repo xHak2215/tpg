@@ -432,7 +432,7 @@ class display:
             if e2 <= dx:
                 err += dx
                 y += sy
-    
+
     def multi_line(self, points:list[tuple], symbol='█', color:tuple=("\33[0m","\33[0m")):
         """
         соеденяет точки указанные в списке
@@ -442,6 +442,8 @@ class display:
             color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа).
             symbol (str): синвол из которого сотоит линия.
         """
+        t_size=terminal_size()
+
         def line(x1,y1, x2,y2):
             step = abs(x1-x2)<abs(y1-y2)
 
@@ -475,6 +477,9 @@ class display:
             if pt == 0:
                 x1, y1 = points[0][0], points[0][1]
                 x2, y2 = points[1][0], points[1][1]
+            
+            if x1 > t_size[0]  or x2  > t_size[0] or y1  > t_size[1] or y2 > t_size[0]:
+                raise ValueError(f"pint {points[pt]} goes beyond")
 
             if pt == len(points):
                 if len(points) >=3:
@@ -484,8 +489,7 @@ class display:
                 
             if x1+y1 == x2+y2:
                 continue
-            
-            print(x1, y1, x2, y2)
+
             line(x1, y1, x2, y2)
         
 
