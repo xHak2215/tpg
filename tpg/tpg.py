@@ -257,7 +257,7 @@ def yes_ro_no(text:str, kastcor='>', yestxt='yes', notxt='no', midst=False, deep
             
         event = keyboard.read_event()
         
-def cursor(X:int, Y:int):
+def move_cursor(X:int, Y:int):
     """Перемещает курсор в консоли на указанные координаты."""
     console_tool.cursor(X, Y)    
     
@@ -279,7 +279,7 @@ def clear():
     else:
         os.system("clear")
 
-def frame(text:str, x=-1, y=-1)->str:
+def frame(text:str, x=-1, y=-1, text_color="\33[0m", frame_color="\33[0m")->str:
     
     text=str(text)
     split=text.split('\n')
@@ -288,10 +288,10 @@ def frame(text:str, x=-1, y=-1)->str:
         ots=' '*(int(round(terminal_size()[0]/2))-int(len(text)+2))
     else:
         ots=' '*x
-    temp_string=f"{ots}╔{'═'*len(max(split, key=len))}╗"
+    temp_string=f"{ots}{frame_color}╔{'═'*len(max(split, key=len))}╗\33[0m"
     for t in split:
-        temp_string=temp_string+f"\n{ots}║{t}{' '*(len(max(split, key=len))-len(t))}║"
-    temp_string=temp_string+f"\n{ots}╚{'═'*len(max(split, key=len))}╝"
+        temp_string=temp_string+f"\n{ots}{frame_color}║\33[0m{text_color}{t}\33[0m{' '*(len(max(split, key=len))-len(t))}{frame_color}║\33[0m"
+    temp_string=temp_string+f"\n{ots}{frame_color}╚{'═'*len(max(split, key=len))}╝\33[0m"
         
     return temp_string
 
@@ -311,7 +311,7 @@ class InputMany:
         Читает ввод и сохраняет в self.output в позиции index.
         index нужен, чтобы сохранить порядок ответов соответствующим переданным координатам.
         """
-        cursor(x + len(prompt), y)
+        move_cursor(x + len(prompt), y)
         user_input = sys.stdin.readline()
         with self.lock:
             self.output.append(user_input)
@@ -325,7 +325,7 @@ class InputMany:
 
         # Сначала отрисуем все промпты
         for (x, y, prompt) in self.inputs_list:
-            cursor(x, y)
+            move_cursor(x, y)
             sys.stdout.write(prompt)
             sys.stdout.flush()
         
@@ -387,7 +387,7 @@ class display:
         for xpos in range(x,x+px):
             self.display[y][xpos] = color[0] + symbol + color[1]
             
-    def cursor(self ,x : int, y : int, symbol='█', color=("\33[0m","\33[0m")):
+    def cursor(self, x : int, y : int, symbol='█', color=("\33[0m","\33[0m")):
         try:
             self.display[y]
         except KeyError:
@@ -492,8 +492,6 @@ class display:
 
             line(x1, y1, x2, y2)
         
-
-
     def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0, color:tuple=("\33[0m","\33[0m")):
         '''### функция рисующая круг (**не работает !**)
 

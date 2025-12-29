@@ -70,7 +70,7 @@ print(out) # print new dict
 ### yes_or_no:
 
 ```python
-import tpg #inport libs
+import tpg #inport lib
 
 if yes_or_no('yes or no'): # yes - True no -false 
     print("press yes") 
@@ -88,7 +88,7 @@ else:
 ### color:
 
 ```python
-from tpg import * #inport libs
+from tpg import * #inport lib
 
 # color color/цвет,stule/стиль,beggraubd/задний фон
 print(color("green text,yelou begraund",'red','standart','yelou')) 
@@ -107,6 +107,41 @@ print('text')
 - white
   
 подходят как для заднего фона так и для цвета текста
+
+
+### move_cursor:
+
+`move_cursor` - изменяет положения курсора в консоли
+
+пример:
+```python
+from tpg import *
+
+move_cursor(5,5)
+print("hello world")
+```
+аргументы:
+- `x` - X координата курсора
+- `y` - Y координата курсора
+
+### clear:
+`clear` - полностью очерняет консоль
+
+### frame:
+`frame` - создает рамку с текстом в нутри
+
+```python
+from tpg import *
+
+print(frame('aaa\naaaa'))
+```
+
+аргументы:
+- `text` - текст находящийся в рамке
+- `x` - X координата рамки, по умолчанию указано -1 и рамка находиться по середине консоли
+- `y` - Y координата рамки, по умолчанию указано -1 и рамка находиться по середине консоли
+- `text_color` - цвет текста в ansi формате
+- `frame_color` - цвет рамки в ansi формате
 
 ---
 
