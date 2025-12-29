@@ -1,7 +1,7 @@
 class ansi:
     def __init__(self):
         
-        self.key={
+        self.key={ 
         "\x08":"backspace", 
         "\x09":"tab", 
         "\x0d":"enter",
