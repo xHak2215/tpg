@@ -533,17 +533,14 @@ class display:
                     self.display[py][px + 1] = color[0] + symbol + color[1]
         y_st = 0
         x_st = 0
-        z_x_1 = 0
-        z_y_1 = 0
-        z_x_2 = 0
-        z_y_2 = 0
         un_rad = max(1, round(radius / math.pi))
         x_un_rad = round(un_rad * aspect)
 
         trig_1 = False
         trig_2 = False
 
-        while y_st != un_rad or x_st != x_un_rad or y_st + 1 != z_y_1 or y_st + 1 != z_y_2:
+        trig_2 = False
+        while y_st != un_rad or x_st != x_un_rad or trig_1 or trig_2:
             # вертикальные полосы
             if y_st != un_rad:
                 plot(cx - radius, cy + y_st)
@@ -573,12 +570,10 @@ class display:
                 trig_2 = True
 
             # соединяем углы
-            if y_st >= un_rad and x_st >= x_un_rad and trig_2 and trig_1:
-                plot(p_x1 + z_x_1, p_y1 - z_y_1)  # верхний правый от p_x1,p_y1
-                plot(p_x2 - z_x_1, p_y2 + z_y_1)  # нижний левый от p_x2,p_y2
-
-                plot(p_x3 - z_x_2, p_y3 + z_y_2)  # нижний левый от p_x3,p_y3
-                plot(p_x4 + z_x_2, p_y4 - z_y_2)  # верхний правый от p_x4,p_y4
+            if trig_2 and trig_1:
+                self.line((p_x1, p_y1), (p_x4, p_y4))  # верхний правый от p_x1,p_y1
+                self.line((p_x2, p_y2), (p_x3, p_y3))  # нижний левый от p_x3,p_y3
+                return
 
     def clear_display(self):
         """### clear display"""
