@@ -279,8 +279,19 @@ def clear():
     else:
         os.system("clear")
 
-def frame(text:str, x=-1, y=-1, text_color="\33[0m", frame_color="\33[0m")->str:
-    
+def frame(text, x=-1, y=-1, text_color="\33[0m", frame_color="\33[0m")->str:
+    """создания рамки с текстом в нутри
+
+    Args:
+        text: текст в нитри рамки
+        x (int, optional): X координата. Defaults to -1.
+        y (int, optional): Y координата. Defaults to -1.
+        text_color (str, optional): цвет текста в ansi формате. Defaults to "\33[0m".
+        frame_color (str, optional): цвет рамки в ansi формате. Defaults to "\33[0m".
+
+    Returns:
+        str: рамка с текстом
+    """
     text=str(text)
     split=text.split('\n')
     
@@ -388,6 +399,14 @@ class display:
             self.display[y][xpos] = color[0] + symbol + color[1]
             
     def cursor(self, x : int, y : int, symbol='█', color=("\33[0m","\33[0m")):
+        """рисует синвол по координатам
+
+        Args:
+            x (int): x координата курсора
+            y (int): Y координата курсора
+            symbol (str, optional): синвол который будет отрисован. Defaults to '█'.
+            color (tuple, optional): цвет символов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа). Defaults to ("\33[0m","\33[0m").
+        """
         try:
             self.display[y]
         except KeyError:
@@ -601,6 +620,24 @@ class display:
 
         for line in range(x-wight+1, x+wight-1):
             self.display[y+higft-1][line] = color[0] + symbol + color[1]
+
+    def printf(self, x:int, y:int, text:str, color = ("\33[0m", "\33[0m")):
+        """печатает текст где каждый синвол находится в собственной клетке
+
+        Args:
+            x (int): X координата 1 синвола
+            y (int): Y координата 
+            text (str): выводимый текст
+            color (tuple, optional):  цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа). Defaults to ("\33[0m", "\33[0m").
+        """
+        t_size=terminal_size()
+        if x > t_size[0]  or y  > t_size[0]:
+            raise ValueError(f"text goes beyond")
+        temp_x=x
+        for symbol in text:
+            print(temp_x, y, symbol)
+            self.cursor(temp_x, y, symbol, color=color)
+            temp_x+=1
         
     def echo(self, end='\r', print_std:bool=True) -> str:
         """выводит буфер на экран
