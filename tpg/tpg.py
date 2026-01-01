@@ -543,8 +543,8 @@ class display:
         while y_st != un_rad or x_st != x_un_rad or trig_1 or trig_2:
             # вертикальные полосы
             if y_st != un_rad:
-                plot(cx - radius, cy + y_st)
-                plot(cx - radius, cy - y_st)
+                plot(cx - radius, cy + y_st)# средный левый нижний
+                plot(cx - radius, cy - y_st)# средный левый верхний
                 plot(cx + radius, cy + y_st)
                 plot(cx + radius, cy - y_st)
                 y_st += 1
@@ -557,13 +557,13 @@ class display:
 
             # горизонтальные полосы
             if x_st != x_un_rad:
-                plot(cx + x_st, cy - x_un_rad)
-                plot(cx - x_st, cy - x_un_rad)
-                plot(cx - x_st, cy + x_un_rad)
-                plot(cx + x_st, cy + x_un_rad)
+                plot(cx + x_st, cy - x_un_rad)# верхний правый
+                plot(cx - x_st, cy - x_un_rad)# верхний левый
+                plot(cx - x_st, cy + x_un_rad)# левый нижний
+                plot(cx + x_st, cy + x_un_rad)# правый нижний 
                 x_st += 1
             elif x_st == x_un_rad:
-                p_x3 = cx + x_st
+                p_x3 = cx - x_st
                 p_y3 = cy - x_un_rad
                 p_x4 = cx + x_st
                 p_y4 = cy + x_un_rad
@@ -571,8 +571,10 @@ class display:
 
             # соединяем углы
             if trig_2 and trig_1:
-                self.line((p_x1, p_y1), (p_x4, p_y4))  # верхний правый от p_x1,p_y1
-                self.line((p_x2, p_y2), (p_x3, p_y3))  # нижний левый от p_x3,p_y3
+                #self.line((p_x4+1, p_y4+1), (p_x1, p_y1))
+                #self.line((p_x2, p_y2), (p_x3, p_y3))
+                #print((p_x3, p_y3), (p_x1, p_y1))
+                #print((p_x2, p_y2), (p_x3, p_y3))
                 return
 
     def clear_display(self):
