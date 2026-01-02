@@ -354,10 +354,15 @@ class InputMany:
 
         return self.output
 
-class display:
-    def __init__(self):
+class display():
+    def __init__(self, size=(None,)):
+        """
+        Args:
+            size (tuple, optional): задает размеры экрана. 1 элемент X координата, 2 элемент Y координата по умолчанию ипользует реальный размер терминала. Defaults to (None,).
+        """
         templist=[]
-        size=terminal_size()
+        if size[0] is None:
+            size=terminal_size()
         for lens in range(size[1]): 
             temp={}
             for i in range(size[0]):
