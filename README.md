@@ -258,7 +258,7 @@ despley.echo()
 
 **соединение точек линией:**
 
-```
+```python
 import tpg 
 
 display = tpg.display()

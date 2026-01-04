@@ -354,6 +354,8 @@ class InputMany:
 
         return self.output
 
+# создано при моральной потдержке @KTkotiktapok
+
 class display():
     def __init__(self, size=(None,)):
         """
@@ -457,7 +459,7 @@ class display():
                 err += dx
                 y += sy
 
-    def multi_line(self, points:list[tuple], symbol='█', color:tuple=("\33[0m","\33[0m")):
+    def multi_line(self, points:list[tuple[int, int]], symbol='█', color:tuple=("\33[0m","\33[0m")):
         """
         соеденяет точки указанные в списке
 
@@ -622,6 +624,19 @@ class display():
 
         for line in range(x-wight+1, x+wight-1):
             self.display[y+higft-1][line] = color[0] + symbol + color[1]
+    
+    def Former(self, point1:tuple[int, int], point2:tuple[int, int], point3:tuple[int, int], symbol='█', color=("\33[0m","\33[0m")):
+        """триугольник с произвольнвм положением точек 
+
+        Args:
+            point1 (tuple[int, int]): точка 1, элемент 0 - X координата, 1 - Y координата 
+            point2 (tuple[int, int]): точка 2, элемент 0 - X координата, 1 - Y координата
+            point3 (tuple[int, int]): точка 3, элемент 0 - X координата, 1 - Y координата
+            symbol (str, optional): синвол из кторого будет состоять фигура. Defaults to '█'.
+            color (tuple, optional):  цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа). Defaults to ("\33[0m","\33[0m").
+        """
+        self.multi_line([point1, point2, point3, point1], symbol, color)
+
 
     def printf(self, x:int, y:int, text:str, color = ("\33[0m", "\33[0m")):
         """печатает текст где каждый синвол находится в собственной клетке
