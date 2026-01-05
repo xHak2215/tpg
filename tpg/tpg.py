@@ -359,16 +359,15 @@ class InputMany:
 
 def rotation_calc(x:int, y:int, cx:float, cy:float, angle_deg:float) -> Tuple[int,int]:
     a = math.radians(angle_deg)
-    src_aspect = 0.4
+    src_aspect = 0.5
 
-    y_norm = max(0, x - cy * src_aspect)
+    y_norm = max(0, x - cy) # ХУЙНЯ!!!!!!!!
     x_n = max(0, y - cx)
 
     xr = x_n * math.cos(a) - y_norm * math.sin(a)
     yr = x_n * math.sin(a) + y_norm * math.cos(a)
 
-    # возвращаем в экранные координаты
-    return abs(round(xr)), abs(round(yr / src_aspect))
+    return round(xr * src_aspect)+x , round(yr / src_aspect)+y
 
 class display():
     def __init__(self, size=(None,)):
@@ -396,7 +395,7 @@ class display():
             y (int): Y Corridate
             symbol (str, optional): symbol box. Defaults to '█'.
             filling (bool): заполнен ли квадрат.
-            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа).
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа).
         """
         
         if y>len(self.display)+py:
@@ -443,7 +442,7 @@ class display():
         Args:
             point1 (tuple): координаты 1 точки формат: `(X, Y)`
             point2 (tuple): координаты 2 точки формат: `(X, Y)`
-            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа).
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа).
             symbol (str): синвол из которого сотоит линия.
         """
         x0, y0 = point1
@@ -479,7 +478,7 @@ class display():
 
         Args:
             points(list): список соеденяемых точек где кажный элемент это кортеж с координатой X и Y
-            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа).
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа).
             symbol (str): синвол из которого сотоит линия.
         """
         t_size=terminal_size()
@@ -540,7 +539,7 @@ class display():
             y (int): Y координата  
             radius (int): радиус круга
             symbol (str): синвол из которого сотоит круг.
-            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа).
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа).
         '''
 
         rows = len(self.display)
@@ -620,7 +619,7 @@ class display():
             h (int): высота
             w (int): ширена
             symbol (str, optional): синвол из кторого будет состоять фигура. Defaults to '█'.
-            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа).
+            color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа).
         """
         
         higft=0
@@ -647,11 +646,22 @@ class display():
             point2 (tuple[int, int]): точка 2, элемент 0 - X координата, 1 - Y координата
             point3 (tuple[int, int]): точка 3, элемент 0 - X координата, 1 - Y координата
             symbol (str, optional): синвол из кторого будет состоять фигура. Defaults to '█'.
-            color (tuple, optional):  цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа). Defaults to ("\33[0m","\33[0m").
+            color (tuple, optional):  цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа). Defaults to ("\33[0m","\33[0m").
         """
         self.multi_line([point1, point2, point3, point1], symbol, color)
 
     def rotation_box(self, x:int, y:int, w:int, h:int, angle:int, symbol:str='█', color:Tuple[str,str]=("\33[0m","\33[0m")):
+        """квадрат/прямоугольник с возможнотью разворота с заданым градусом
+
+        Args:
+            x (int): X координата
+            y (int): Y координата
+            w (int): ширена
+            h (int): высота
+            angle (int): градус наклона
+            symbol (str, optional): синвол из кторого будет состоять фигура. Defaults to '█'.
+            color (Tuple[str,str], optional): цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа). Defaults to ("\33[0m","\33[0m").
+        """
         cx = x + w / 2
         cy = y + h / 2
         p1 = rotation_calc(x, y, cx, cy, angle)
@@ -668,7 +678,7 @@ class display():
             x (int): X координата 1 синвола
             y (int): Y координата 
             text (str): выводимый текст
-            color (tuple, optional):  цвет синволов где 0 элемент это начало ANSI кода (перед синволом), а 1 его конец (после символа). Defaults to ("\33[0m", "\33[0m").
+            color (tuple, optional):  цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа). Defaults to ("\33[0m", "\33[0m").
         """
         t_size=terminal_size()
         if x > t_size[0]  or y  > t_size[0]:
