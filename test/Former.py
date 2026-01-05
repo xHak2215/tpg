@@ -2,6 +2,6 @@ import tpg
 
 display = tpg.display()
 
-display.Former((5,2),(1,5),(5,10))
+display.Former((15,2), (8,8), (2,2))
 
 display.echo()

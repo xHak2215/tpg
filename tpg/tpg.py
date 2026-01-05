@@ -10,6 +10,7 @@ import ctypes
 from ctypes import wintypes
 import re
 import math
+from typing import List, Tuple
 
 from .ansi import  ansi, art
 import console_tool
@@ -354,7 +355,20 @@ class InputMany:
 
         return self.output
 
-# создано при моральной потдержке @KTkotiktapok
+# создано при моральной поддержке @KTkotiktapok
+
+def rotation_calc(x:int, y:int, cx:float, cy:float, angle_deg:float) -> Tuple[int,int]:
+    a = math.radians(angle_deg)
+    src_aspect = 0.4
+
+    y_norm = max(0, x - cy * src_aspect)
+    x_n = max(0, y - cx)
+
+    xr = x_n * math.cos(a) - y_norm * math.sin(a)
+    yr = x_n * math.sin(a) + y_norm * math.cos(a)
+
+    # возвращаем в экранные координаты
+    return abs(round(xr)), abs(round(yr / src_aspect))
 
 class display():
     def __init__(self, size=(None,)):
@@ -637,6 +651,15 @@ class display():
         """
         self.multi_line([point1, point2, point3, point1], symbol, color)
 
+    def rotation_box(self, x:int, y:int, w:int, h:int, angle:int, symbol:str='█', color:Tuple[str,str]=("\33[0m","\33[0m")):
+        cx = x + w / 2
+        cy = y + h / 2
+        p1 = rotation_calc(x, y, cx, cy, angle)
+        p2 = rotation_calc(x + w, y, cx, cy, angle)
+        p3 = rotation_calc(x + w, y + h, cx, cy, angle)
+        p4 = rotation_calc(x, y + h, cx, cy, angle)
+
+        self.multi_line([p1, p2, p3, p4, p1], symbol=symbol, color=color)
 
     def printf(self, x:int, y:int, text:str, color = ("\33[0m", "\33[0m")):
         """печатает текст где каждый синвол находится в собственной клетке
@@ -656,11 +679,11 @@ class display():
             self.cursor(temp_x, y, symbol, color=color)
             temp_x+=1
         
-    def echo(self, end='\r', print_std:bool=True) -> str:
+    def echo(self, end='\n', print_std:bool=True) -> str:
         """выводит буфер на экран
 
         Args:
-            end (str, optional): аргумент end. Defaults to '\r'.
+            end (str, optional): аргумент end. Defaults to '\n'.
             print_std (bool): вудет ли вывод содержимого буфера в терминал. Defaults to `True`. 
 
         Returns:
