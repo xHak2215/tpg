@@ -223,7 +223,7 @@ import tpg
 
 disply=tpg.display()
 
-disply.circle(5, 5, 3)
+disply.circle(5, 5, 4)
 
 disply.echo()
 ```
@@ -234,7 +234,6 @@ disply.echo()
 - `cy` - y координата середины круга 
 - `radius` - радиус круга
 - `symbol` - синвол круга 
-- `full` - толщина круга 
 
 **триульник:**
 

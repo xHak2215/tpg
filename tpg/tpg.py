@@ -547,8 +547,6 @@ class display():
         point3 = (round(cx-radius - (radius/100*60)), cy)# правая
         point4 = (cx, cy-radius)# нижняя точа
 
-        print((radius/100*6), '|', cx+radius)
-
         def pr(p:tuple):
             self.display[p[1]][p[0]] = color[0] + symbol + color[1]
 
@@ -557,7 +555,7 @@ class display():
         self.line(point4, point3, symbol=symbol, color=color)
         self.line(point3, point1, symbol=symbol, color=color)"""
 
-        aspectx = round(radius/2 * 1.6)
+        aspectx = round(radius/2 * 1.7)
         aspecty = round(radius/2)# воотношение синвола это 40/32
 
         for x, y in product(range(aspectx), range(aspecty)):
