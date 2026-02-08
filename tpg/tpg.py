@@ -11,6 +11,7 @@ from ctypes import wintypes
 import re
 import math
 from typing import List, Tuple
+from itertools import product
 
 from .ansi import  ansi, art
 import console_tool
@@ -531,7 +532,7 @@ class display():
 
             line(x1, y1, x2, y2)
         
-    def circle(self, cx: int, cy: int, radius: int, symbol='█', full=0, color:tuple=("\33[0m","\33[0m")):
+    def circle(self, cx: int, cy: int, radius: int, symbol='█', color:tuple=("\33[0m","\33[0m")):
         '''### функция рисующая круг (**не работает !**)
 
         Args: 
@@ -541,61 +542,53 @@ class display():
             symbol (str): синвол из которого сотоит круг.
             color (tuple): цвет синволов где 0 элемент это начало ANSI кода (перед символом), а 1 его конец (после символа).
         '''
+        point1 = (cx, cy+radius)# верхняя точка
+        point2 = (round(cx+radius + (radius/100*60)), cy)# левая
+        point3 = (round(cx-radius - (radius/100*60)), cy)# правая
+        point4 = (cx, cy-radius)# нижняя точа
 
-        rows = len(self.display)
-        cols = len(self.display[0]) if rows > 0 else 0
-        aspect = 2.0  # char_height / char_width
+        print((radius/100*6), '|', cx+radius)
 
-        def plot(px, py):
-            if 0 <= py < rows and 0 <= px < cols:
-                self.display[py][px] = color[0] + symbol + color[1]
-                if full and px + 1 < cols:
-                    self.display[py][px + 1] = color[0] + symbol + color[1]
-        y_st = 0
-        x_st = 0
-        un_rad = max(1, round(radius / math.pi))
-        x_un_rad = round(un_rad * aspect)
+        def pr(p:tuple):
+            self.display[p[1]][p[0]] = color[0] + symbol + color[1]
 
-        trig_1 = False
-        trig_2 = False
+        """self.line(point1, point2, symbol=symbol, color=color)
+        self.line(point2, point4, symbol=symbol, color=color)
+        self.line(point4, point3, symbol=symbol, color=color)
+        self.line(point3, point1, symbol=symbol, color=color)"""
 
-        trig_2 = False
-        while y_st != un_rad or x_st != x_un_rad or trig_1 or trig_2:
-            # вертикальные полосы
-            if y_st != un_rad:
-                plot(cx - radius, cy + y_st)# средный левый нижний
-                plot(cx - radius, cy - y_st)# средный левый верхний
-                plot(cx + radius, cy + y_st)
-                plot(cx + radius, cy - y_st)
-                y_st += 1
-            elif y_st == un_rad:
-                p_x1 = cx - radius
-                p_y1 = cy + y_st
-                p_x2 = cx + radius
-                p_y2 = cy - y_st
-                trig_1 = True
+        aspectx = round(radius/2 * 1.6)
+        aspecty = round(radius/2)# воотношение синвола это 40/32
 
-            # горизонтальные полосы
-            if x_st != x_un_rad:
-                plot(cx + x_st, cy - x_un_rad)# верхний правый
-                plot(cx - x_st, cy - x_un_rad)# верхний левый
-                plot(cx - x_st, cy + x_un_rad)# левый нижний
-                plot(cx + x_st, cy + x_un_rad)# правый нижний 
-                x_st += 1
-            elif x_st == x_un_rad:
-                p_x3 = cx - x_st
-                p_y3 = cy - x_un_rad
-                p_x4 = cx + x_st
-                p_y4 = cy + x_un_rad
-                trig_2 = True
+        for x, y in product(range(aspectx), range(aspecty)):
+            pr((point1[0]+x, point1[1]))
+            pr((point1[0]-x, point1[1]))
 
-            # соединяем углы
-            if trig_2 and trig_1:
-                #self.line((p_x4+1, p_y4+1), (p_x1, p_y1))
-                #self.line((p_x2, p_y2), (p_x3, p_y3))
-                #print((p_x3, p_y3), (p_x1, p_y1))
-                #print((p_x2, p_y2), (p_x3, p_y3))
-                return
+            pr((point2[0], point2[1]+y))
+            pr((point2[0], point2[1]-y))
+
+            pr((point3[0], point3[1]+y))
+            pr((point3[0], point3[1]-y))
+
+            pr((point4[0]+x, point4[1]))
+            pr((point4[0]-x, point4[1]))
+        
+            p1 = (point1[0]+x, point1[1])
+            p2 = (point1[0]-x, point1[1])
+            p3 = (point2[0], point2[1]+y)
+            p4 = (point2[0], point2[1]-y)
+            p5 = (point3[0], point3[1]+y)
+            p6 = (point3[0], point3[1]-y)
+            p7 = (point4[0]+x, point4[1])
+            p8 = (point4[0]-x, point4[1])
+
+        
+        self.line(p1, p3)
+        self.line(p2, p5)
+
+        self.line(p4, p7)
+        self.line(p6, p8)       
+
 
     def clear_display(self):
         """### clear display"""
@@ -603,7 +596,7 @@ class display():
         self.display={}
         templist=[]
         size=terminal_size()
-        for lens in range(size[1]): 
+        for _ in range(size[1]): 
             temp={}
             for i in range(size[0]):
                 temp[i]=' '
