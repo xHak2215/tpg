@@ -498,7 +498,7 @@ class display():
             x=x1
             while x<=x2:
                 t = (x-x1) / float(x2-x1)
-                y = round( y1 + (y2-y1)*t)
+                y = round(y1 + (y2-y1)*t)
                 if step:
                     self.cursor(y, x, symbol=symbol, color=color)
                 else:
@@ -508,17 +508,17 @@ class display():
         for pt in range(0,len(points)):
 
             if pt % 2 == 0:
-                x2=points[pt][0]
-                y2=points[pt][1]
+                x2 = points[pt][0]
+                y2 = points[pt][1]
             else:
-                x1=points[pt][0]
-                y1=points[pt][1]
+                x1 = points[pt][0]
+                y1 = points[pt][1]
             
             if pt == 0:
                 x1, y1 = points[0][0], points[0][1]
                 x2, y2 = points[1][0], points[1][1]
             
-            if x1 > t_size[0]  or x2  > t_size[0] or y1  > t_size[1] or y2 > t_size[0]:
+            if x1 > t_size[0] or x2 > t_size[0] or y1  > t_size[1] or y2 > t_size[0]:
                 raise ValueError(f"pint {points[pt]} goes beyond")
 
             if pt == len(points):
@@ -570,22 +570,23 @@ class display():
 
             pr((point4[0]+x, point4[1]))
             pr((point4[0]-x, point4[1]))
-        
-            p1 = (point1[0]+x, point1[1])
-            p2 = (point1[0]-x, point1[1])
-            p3 = (point2[0], point2[1]+y)
-            p4 = (point2[0], point2[1]-y)
-            p5 = (point3[0], point3[1]+y)
-            p6 = (point3[0], point3[1]-y)
-            p7 = (point4[0]+x, point4[1])
-            p8 = (point4[0]-x, point4[1])
+
+            if aspectx-1 == x and aspecty-1 == y:   
+                p1 = (point1[0]+x, point1[1])
+                p2 = (point1[0]-x, point1[1])
+                p3 = (point2[0], point2[1]+y)
+                p4 = (point2[0], point2[1]-y)
+                p5 = (point3[0], point3[1]+y)
+                p6 = (point3[0], point3[1]-y)
+                p7 = (point4[0]+x, point4[1])
+                p8 = (point4[0]-x, point4[1])
 
         
-        self.line(p1, p3)
-        self.line(p2, p5)
+        self.line(p1, p3, symbol=symbol, color=color)
+        self.line(p2, p5, symbol=symbol, color=color)
 
-        self.line(p4, p7)
-        self.line(p6, p8)       
+        self.line(p4, p7, symbol=symbol, color=color)
+        self.line(p6, p8, symbol=symbol, color=color)       
 
 
     def clear_display(self):
