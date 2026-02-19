@@ -23,7 +23,7 @@ out_point=listgr(['point1','point2','point3'])
 print(out_point)
 ```
 
-doc/list_test.gif
+[image](list_test.gif)
 
 Arguments:
 kastor - parameter responsible for the cursor displayed before the selected item (default '>')
